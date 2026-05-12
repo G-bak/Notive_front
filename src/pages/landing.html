@@ -1,0 +1,5895 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Notive — 회사의 업무 흐름을 이해하는 AI 업무 운영 플랫폼</title>
+<link rel="icon" type="image/png" href="/brand/favicon_medium.png" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css" />
+<style>
+:root {
+  --primary: #006853;
+  --primary-hover: #005242;
+  --primary-light: #E6F0EE;
+  --bg: #ffffff;
+  --bg-soft: #F8FAFC;
+  --bg-mid: #F1F5F9;
+  --text-main: #0F172A;
+  --text-muted: #475569;
+  --text-light: #94A3B8;
+  --border: #E2E8F0;
+  --border-soft: #F1F5F9;
+  --warning: #F59E0B;
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --shadow-md: 0 4px 12px -2px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 16px 40px -8px rgba(15, 23, 42, 0.16);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: var(--text-main);
+  background: var(--bg);
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a { color: inherit; text-decoration: none; }
+button { font: inherit; cursor: pointer; border: none; background: none; }
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ============ NAV ============ */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: saturate(180%) blur(12px);
+  -webkit-backdrop-filter: saturate(180%) blur(12px);
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.nav-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 64px;
+}
+
+.logo { display: flex; align-items: center; }
+.logo img { height: 24px; }
+
+.nav-links {
+  display: flex;
+  gap: 32px;
+  align-items: center;
+}
+
+.nav-links a {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-muted);
+  transition: color 0.15s ease;
+}
+.nav-links a:hover { color: var(--text-main); }
+
+.nav-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.menu-toggle { display: none; padding: 6px; color: var(--text-muted); }
+
+/* ============ BUTTONS ============ */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 18px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.btn-link {
+  padding: 10px 14px;
+  color: var(--text-main);
+  background: transparent;
+}
+.btn-link:hover { color: var(--primary); }
+
+.btn-primary {
+  color: white;
+  background:
+    radial-gradient(120% 90% at 0% 0%, rgba(255,255,255,0.18), transparent 55%),
+    linear-gradient(180deg, #008068 0%, var(--primary) 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.22),
+    0 1px 2px rgba(0,60,48,0.16),
+    0 4px 12px -2px rgba(0,60,48,0.18);
+}
+.btn-primary:hover { filter: brightness(1.06); }
+
+.btn-outline {
+  color: var(--text-main);
+  background: white;
+  border: 1.5px solid var(--border);
+}
+.btn-outline:hover { border-color: var(--primary); color: var(--primary); }
+
+.btn-ghost {
+  color: var(--text-main);
+  background: white;
+  border: 1.5px solid var(--border);
+}
+.btn-ghost:hover { background: var(--bg-soft); }
+
+.btn-light {
+  color: var(--primary);
+  background: white;
+  box-shadow: 0 4px 12px -2px rgba(0,0,0,0.18);
+}
+.btn-light:hover { transform: translateY(-1px); box-shadow: 0 8px 18px -4px rgba(0,0,0,0.24); }
+
+.btn-ghost-light {
+  color: white;
+  background: rgba(255,255,255,0.10);
+  border: 1.5px solid rgba(255,255,255,0.30);
+}
+.btn-ghost-light:hover { background: rgba(255,255,255,0.20); }
+
+.btn-lg { padding: 13px 22px; font-size: 15px; border-radius: 10px; }
+.btn-block { width: 100%; }
+
+.icon { width: 16px; height: 16px; flex-shrink: 0; }
+.icon-sm { width: 14px; height: 14px; }
+.icon-lg { width: 22px; height: 22px; }
+
+/* ============ INTRO ============ */
+.intro {
+  position: relative;
+  padding: 100px 0 140px;
+  background:
+    radial-gradient(circle at 20% 10%, rgba(0,104,83,0.07), transparent 45%),
+    radial-gradient(circle at 80% 30%, rgba(0,104,83,0.05), transparent 45%),
+    radial-gradient(circle at 50% 90%, rgba(0,104,83,0.06), transparent 50%),
+    var(--bg);
+  overflow: hidden;
+}
+
+/* 미세한 그리드 배경 */
+.intro::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,104,83,0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,104,83,0.04) 1px, transparent 1px);
+  background-size: 48px 48px;
+  mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 80%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 50%, black 30%, transparent 80%);
+  pointer-events: none;
+}
+
+.intro-header {
+  position: relative;
+  text-align: center;
+  max-width: 780px;
+  margin: 0 auto 80px;
+}
+
+.intro-title {
+  font-size: clamp(40px, 5.4vw, 60px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin: 18px 0 18px;
+}
+
+.intro-subtitle {
+  font-size: 17px;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.intro-subtitle b { color: var(--primary); font-weight: 700; }
+
+/* ============ STAGE: 데이터 → AI → 문서 ============ */
+.intro-stage {
+  position: relative;
+  max-width: 880px;
+  margin: 0 auto;
+}
+
+/* 1️⃣ 데이터 소스 카드들 */
+.intro-sources {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 12px;
+  z-index: 2;
+}
+
+.src-card {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 14px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 4px 12px -4px rgba(15,23,42,0.08);
+  animation: srcFloat 4s ease-in-out infinite;
+}
+
+/* 카드별 애니메이션 위상 분산 */
+.src-pos-1 { animation-delay: 0s; transform: translateY(0); }
+.src-pos-2 { animation-delay: 0.5s; transform: translateY(8px); }
+.src-pos-3 { animation-delay: 1s; transform: translateY(-6px); }
+.src-pos-4 { animation-delay: 1.5s; transform: translateY(4px); }
+.src-pos-5 { animation-delay: 2s; transform: translateY(-2px); }
+
+@keyframes srcFloat {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.src-ico {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.src-title {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-main);
+  white-space: nowrap;
+}
+
+.src-meta {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
+
+/* 2️⃣ 흐름 + AI 코어 */
+.intro-flow {
+  position: relative;
+  height: 200px;
+}
+
+.intro-flow.flow-down {
+  height: 80px;
+  margin-top: -16px;
+}
+
+.flow-svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.flow-line {
+  stroke-dashoffset: 0;
+  animation: flowDash 1.5s linear infinite;
+}
+
+@keyframes flowDash {
+  to { stroke-dashoffset: -20; }
+}
+
+.ai-core {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 3;
+}
+
+.ai-core-glow {
+  position: absolute;
+  inset: -40px;
+  background: radial-gradient(circle, rgba(0,104,83,0.30), transparent 70%);
+  border-radius: 50%;
+  animation: aiPulse 2.4s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes aiPulse {
+  0%, 100% { transform: scale(1); opacity: 0.6; }
+  50% { transform: scale(1.15); opacity: 1; }
+}
+
+.ai-core-ring {
+  position: absolute;
+  width: 88px;
+  height: 88px;
+  bottom: 22px;
+  border-radius: 50%;
+  border: 1.5px dashed rgba(0,104,83,0.35);
+  animation: aiSpin 18s linear infinite;
+}
+
+@keyframes aiSpin {
+  to { transform: rotate(360deg); }
+}
+
+.ai-core-inner {
+  position: relative;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 30% 25%, rgba(255,255,255,0.30), transparent 55%),
+    linear-gradient(180deg, #008068, var(--primary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.30),
+    0 8px 24px -4px rgba(0,60,48,0.45);
+}
+
+.ai-core-label {
+  margin-top: 10px;
+  padding: 4px 12px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--primary);
+  box-shadow: 0 2px 6px -1px rgba(15,23,42,0.08);
+}
+
+/* 3️⃣ 결과 문서 */
+.intro-result {
+  position: relative;
+  z-index: 2;
+}
+
+.result-doc {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  overflow: hidden;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,0.6) inset,
+    0 12px 40px -8px rgba(0,60,48,0.18),
+    0 30px 80px -20px rgba(15,23,42,0.20);
+  animation: resultFade 0.9s ease-out;
+}
+
+@keyframes resultFade {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.result-doc-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 20px;
+  background: var(--bg-soft);
+  border-bottom: 1px solid var(--border);
+}
+
+.result-bar-left {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.result-doc-tab {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.result-doc-meta {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.result-doc-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 5px 12px;
+  background: var(--primary-light);
+  color: var(--primary);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+/* Grid: 좌측 목차 + 본문 */
+.result-doc-grid {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+}
+
+.result-toc {
+  padding: 24px 16px;
+  background: var(--bg-soft);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.result-toc-head {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--text-light);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  margin-bottom: 4px;
+}
+
+.result-toc-item {
+  display: block;
+  padding: 7px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.result-toc-item:hover {
+  background: white;
+  color: var(--text-main);
+}
+
+.result-toc-item.active {
+  background: var(--primary-light);
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.result-doc-body {
+  padding: 30px 36px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.result-h {
+  font-size: 22px;
+  font-weight: 800;
+  letter-spacing: -0.015em;
+}
+
+.result-byline {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-muted);
+  margin-bottom: 14px;
+}
+
+.result-author {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.result-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.result-byline-dot { color: var(--border); }
+
+.result-byline-tag {
+  margin-left: auto;
+  padding: 2px 8px;
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.result-section-h {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: -0.01em;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border-soft);
+}
+
+.result-section-h:first-of-type {
+  margin-top: 8px;
+  padding-top: 0;
+  border-top: none;
+}
+
+/* KPI 4-grid */
+.result-kpis {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+}
+
+.result-kpi {
+  padding: 14px 14px;
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.kpi-label {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.kpi-num {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--text-main);
+  letter-spacing: -0.02em;
+}
+.kpi-num span {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-left: 2px;
+}
+
+.kpi-change {
+  font-size: 11px;
+  font-weight: 700;
+}
+.kpi-change.up { color: var(--primary); }
+
+/* Channel table */
+.result-table {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  overflow: hidden;
+  background: white;
+}
+
+.rt-row {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr 1fr 1fr;
+  align-items: center;
+  padding: 10px 14px;
+  border-bottom: 1px solid var(--border-soft);
+  font-size: 12px;
+}
+
+.rt-row:last-child { border-bottom: none; }
+
+.rt-row.head {
+  background: var(--bg-soft);
+  font-weight: 800;
+  color: var(--text-muted);
+  font-size: 11px;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.rt-row.hl {
+  background: var(--primary-light);
+}
+
+.rt-row.hl > span:first-child {
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.rt-strong {
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.rt-row.hl .rt-strong { color: var(--primary); }
+
+/* Insight callout */
+.result-insight {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px 16px;
+  background: linear-gradient(135deg, var(--primary-light), white);
+  border: 1px solid rgba(0,104,83,0.18);
+  border-left: 3px solid var(--primary);
+  border-radius: 10px;
+}
+
+.insight-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: var(--primary);
+  color: white;
+  border-radius: 8px;
+  flex-shrink: 0;
+}
+
+.insight-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-main);
+  line-height: 1.5;
+}
+.insight-title b { color: var(--primary); }
+
+.insight-desc {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-top: 4px;
+}
+.insight-desc b { color: var(--primary); font-weight: 700; }
+
+/* Checklist */
+.result-checklist {
+  list-style: none;
+  padding-left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.result-checklist li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-main);
+  padding: 6px 10px;
+  background: var(--bg-soft);
+  border-radius: 6px;
+}
+
+/* Plan items */
+.result-plan {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.plan-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.plan-prio {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 7px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  flex-shrink: 0;
+}
+.plan-prio.p1 { background: #FEE2E2; color: #B91C1C; }
+.plan-prio.p2 { background: #FEF3C7; color: #B45309; }
+
+.plan-text {
+  flex: 1;
+  font-size: 13px;
+  color: var(--text-main);
+}
+
+.plan-due {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+/* Risk */
+.result-risk {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px 14px;
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  border-left: 3px solid #DC2626;
+  border-radius: 10px;
+}
+
+.risk-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #DC2626;
+  margin-top: 6px;
+  flex-shrink: 0;
+}
+
+.risk-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #B91C1C;
+}
+
+.risk-desc {
+  font-size: 12px;
+  color: #7F1D1D;
+  margin-top: 3px;
+  opacity: 0.85;
+}
+
+/* Citation footer */
+.result-cite {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 16px;
+  padding: 12px 14px;
+  background: var(--primary-light);
+  border-radius: 8px;
+  font-size: 12px;
+  color: var(--text-main);
+  font-weight: 500;
+}
+.result-cite b { color: var(--primary); font-weight: 700; }
+
+/* Responsive (intro) */
+@media (max-width: 960px) {
+  .intro-sources {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .src-card { padding: 10px 12px; }
+  .intro-flow { height: 140px; }
+  .result-doc-grid { grid-template-columns: 1fr; }
+  .result-toc {
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 12px 16px;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+  }
+  .result-toc-head { display: none; }
+  .result-toc-item { white-space: nowrap; padding: 6px 12px; }
+  .result-doc-body { padding: 22px 20px; }
+  .result-h { font-size: 18px; }
+  .result-kpis { grid-template-columns: repeat(2, 1fr); }
+  .rt-row { font-size: 11px; padding: 8px 10px; }
+}
+
+/* ============ FEATURES SECTION HEADER ============ */
+.features-head {
+  padding: 100px 0 40px;
+  background: var(--bg);
+}
+
+.features-head-inner {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+.features-head-title {
+  font-size: clamp(32px, 4vw, 44px);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+  margin: 16px 0 14px;
+}
+
+.features-head-subtitle {
+  font-size: 16px;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+/* ============ FEAT BLOCK COMMON ============ */
+.feat-block {
+  padding: 70px 0;
+}
+
+.feat-block.soft {
+  background: var(--bg-soft);
+}
+
+.feat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.15fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.feat-grid.reverse .feat-text {
+  order: 2;
+}
+
+.feat-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: var(--primary);
+  color: white;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  margin-bottom: 14px;
+}
+
+.feat-text .eyebrow { margin-bottom: 14px; }
+
+.feat-title {
+  font-size: clamp(26px, 3vw, 34px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 18px;
+}
+
+.feat-scene {
+  font-size: 15px;
+  color: var(--text-muted);
+  line-height: 1.7;
+  margin-bottom: 24px;
+  padding-left: 14px;
+  border-left: 3px solid var(--primary-light);
+}
+
+.feat-bullets {
+  list-style: none;
+  padding-left: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.feat-bullets li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.feat-bullet-ico {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+  background: var(--primary-light);
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.feat-bullet-h {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin-bottom: 2px;
+}
+
+.feat-bullet-d {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.mock-frame {
+  position: relative;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 18px;
+  box-shadow:
+    0 4px 12px -2px rgba(15,23,42,0.06),
+    0 24px 60px -12px rgba(0,60,48,0.18);
+}
+
+.mock-frame::before {
+  content: "";
+  position: absolute;
+  inset: -28px;
+  background: radial-gradient(circle at 50% 50%, rgba(0,104,83,0.08), transparent 60%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* ============ FEAT 1: 다이어리/To-do mock ============ */
+.diary-mock {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.diary-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 4px;
+}
+
+.diary-week {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.diary-tag {
+  padding: 3px 9px;
+  background: var(--primary-light);
+  color: var(--primary);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.diary-day {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--bg-soft);
+  border-radius: 8px;
+  border: 1px solid transparent;
+}
+
+.diary-day.editing {
+  background: white;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.diary-day-name {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: white;
+  border: 1px solid var(--border);
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.diary-day-name.today {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+}
+
+.diary-day-text {
+  flex: 1;
+  font-size: 12px;
+  color: var(--text-main);
+  line-height: 1.4;
+}
+
+.diary-day-text.typing { color: var(--text-muted); }
+
+.diary-tag-mini {
+  padding: 2px 7px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.diary-tag-mini.live {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: white;
+  animation: livePulse 1.5s ease-in-out infinite;
+}
+
+@keyframes livePulse {
+  50% { opacity: 0.6; }
+}
+
+.diary-todos {
+  margin-top: 4px;
+  padding: 12px;
+  background: var(--bg-soft);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.diary-todos-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-main);
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 4px;
+}
+
+.diary-todos-head svg { color: var(--primary); }
+
+.diary-todo-count {
+  margin-left: auto;
+  font-size: 10px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.diary-todo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 6px;
+  font-size: 12px;
+}
+
+.diary-todo.done span:nth-child(2) {
+  text-decoration: line-through;
+  color: var(--text-muted);
+}
+
+.diary-todo > span:nth-child(2) {
+  flex: 1;
+  color: var(--text-main);
+}
+
+.diary-todo-check {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border: 1.5px solid var(--border);
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.diary-todo-due {
+  font-size: 10px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.diary-todo-due.p1 {
+  color: #B91C1C;
+  background: #FEE2E2;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.diary-cta {
+  margin-top: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px;
+  background:
+    radial-gradient(120% 90% at 0% 0%, rgba(255,255,255,0.18), transparent 55%),
+    linear-gradient(180deg, #008068, var(--primary));
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 13px;
+  font-weight: 700;
+  font-family: inherit;
+  box-shadow: 0 4px 12px -2px rgba(0,60,48,0.30);
+}
+
+/* ============ FEAT 2: 검색 mock ============ */
+.search-mock {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.search-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 14px;
+  background: white;
+  border: 1.5px solid var(--primary);
+  border-radius: 10px;
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.search-q {
+  flex: 1;
+  font-size: 13px;
+  color: var(--text-main);
+  font-weight: 500;
+}
+
+.search-filter {
+  padding: 4px 10px;
+  background: var(--primary-light);
+  color: var(--primary);
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.search-ai {
+  padding: 14px 16px;
+  background: linear-gradient(135deg, var(--primary-light), white);
+  border: 1px solid rgba(0,104,83,0.18);
+  border-left: 3px solid var(--primary);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.search-ai-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.search-ai-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  background: var(--primary);
+  color: white;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.search-ai-time {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.search-ai-body {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--text-main);
+}
+
+.search-ai-body b { color: var(--primary); font-weight: 700; }
+
+.search-cite-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.search-cite {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-main);
+  text-decoration: none;
+}
+
+.search-list-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0 4px;
+}
+
+.search-list-count {
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  padding: 2px 8px;
+  border-radius: 999px;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.search-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  background: var(--bg-soft);
+  border-radius: 8px;
+}
+
+.search-row-ico {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: white;
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.search-row-info { flex: 1; min-width: 0; }
+.search-row-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+.search-row-meta {
+  font-size: 11px;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
+
+.search-perm-note {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 12px;
+  background: var(--bg-soft);
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  font-size: 11px;
+  color: var(--text-muted);
+}
+.search-perm-note b { color: var(--text-main); font-weight: 700; }
+
+/* ============ FEAT 3: 협업/권한 mock ============ */
+.collab-mock {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  min-height: 360px;
+}
+
+.collab-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.collab-doc-name {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.collab-presence {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.presence-avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  font-size: 10px;
+  font-weight: 800;
+  border: 2px solid white;
+}
+
+.presence-avatar.small {
+  width: 22px;
+  height: 22px;
+  font-size: 9px;
+  border-width: 1.5px;
+}
+
+.presence-label {
+  margin-left: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.collab-doc {
+  padding: 16px 18px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.collab-line {
+  height: 8px;
+  background: var(--bg-mid);
+  border-radius: 4px;
+}
+.collab-line.short { width: 60%; }
+
+.collab-doc-emph {
+  position: relative;
+  padding: 4px 0;
+}
+
+.collab-highlight {
+  display: inline-block;
+  padding: 4px 8px;
+  background: rgba(0,104,83,0.14);
+  border-bottom: 2px solid var(--primary);
+  border-radius: 3px;
+  font-size: 12px;
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.collab-cursor {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 6px;
+}
+
+.collab-cursor-bar {
+  display: inline-block;
+  width: 2px;
+  height: 16px;
+  background: var(--primary);
+  border-radius: 1px;
+  margin-right: 2px;
+  animation: cursorBlink 1s steps(2) infinite;
+}
+
+@keyframes cursorBlink {
+  50% { opacity: 0.3; }
+}
+
+.collab-cursor-tag {
+  padding: 2px 8px;
+  background: var(--primary);
+  color: white;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.collab-comment {
+  display: flex;
+  gap: 10px;
+  padding: 12px;
+  background: var(--bg-soft);
+  border-radius: 10px;
+  border-left: 3px solid #F59E0B;
+}
+
+.collab-comment-body { flex: 1; }
+
+.collab-comment-author {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+.collab-comment-author span {
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.collab-comment-text {
+  font-size: 12px;
+  color: var(--text-main);
+  line-height: 1.5;
+  margin-top: 3px;
+}
+
+.collab-comment-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 6px;
+}
+
+.collab-comment-actions span {
+  font-size: 11px;
+  color: var(--primary);
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* 권한 모달 (떠있음) */
+.collab-share-modal {
+  position: absolute;
+  right: -8px;
+  bottom: -16px;
+  width: 280px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow:
+    0 12px 32px -8px rgba(15,23,42,0.18),
+    0 24px 64px -12px rgba(0,60,48,0.20);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transform: rotate(-2deg);
+}
+
+.share-modal-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.share-modal-close {
+  margin-left: auto;
+  color: var(--text-muted);
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.share-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 4px;
+}
+
+.share-row-info { flex: 1; min-width: 0; }
+
+.share-row-name {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.share-row-sub {
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.share-role {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.share-role.select {
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  padding: 3px 8px;
+  border-radius: 6px;
+  color: var(--text-muted);
+}
+
+.share-modal-foot {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+  padding: 8px 10px;
+  background: #FEF2F2;
+  border: 1px solid #FECACA;
+  border-radius: 8px;
+  font-size: 11px;
+  color: #7F1D1D;
+}
+.share-modal-foot b { color: #B91C1C; font-weight: 700; }
+
+/* Responsive (features) */
+@media (max-width: 960px) {
+  .feat-grid {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+  .feat-grid.reverse .feat-text { order: 0; }
+  .feat-block { padding: 56px 0; }
+  .collab-share-modal {
+    position: static;
+    width: 100%;
+    transform: none;
+    margin-top: 8px;
+  }
+  .features-head { padding: 70px 0 24px; }
+}
+
+/* ============================================================== */
+/* ONBOARDING — 공통 ============================================ */
+/* ============================================================== */
+.onb-section {
+  padding: 100px 0;
+  position: relative;
+}
+.onb-section.soft { background: var(--bg-soft); }
+
+.onb-marker {
+  display: inline-block;
+  padding: 4px 10px;
+  background: #FEF3C7;
+  color: #92400E;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  margin-bottom: 24px;
+}
+
+.onb-head {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 56px;
+}
+
+.onb-title {
+  font-size: clamp(32px, 4vw, 44px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin: 16px 0 14px;
+}
+.onb-title .accent { color: var(--primary); }
+
+.onb-subtitle {
+  font-size: 16px;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.onb-cta {
+  margin-top: 56px;
+  text-align: center;
+}
+
+/* ============ 공통 mock 컴포넌트 ============ */
+/* Sign-up form */
+.signup-mock {
+  padding: 18px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: var(--shadow-md);
+}
+.sm-h { font-size: 14px; font-weight: 800; padding-bottom: 6px; border-bottom: 1px solid var(--border-soft); }
+.sm-input {
+  padding: 10px 12px;
+  background: var(--bg-soft);
+  border: 1.5px solid var(--border);
+  border-radius: 8px;
+  font-size: 12px;
+  color: var(--text-main);
+}
+.sm-input span { color: var(--text-muted); margin-right: 6px; font-weight: 700; }
+.sm-divider { display: flex; align-items: center; gap: 10px; color: var(--text-light); font-size: 11px; }
+.sm-divider::before, .sm-divider::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+.sm-sso {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 12px;
+  background: white; border: 1px solid var(--border); border-radius: 8px;
+  font-size: 12px; font-weight: 600; color: var(--text-main);
+  font-family: inherit;
+}
+.sm-g, .sm-m {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 22px; height: 22px; border-radius: 4px;
+  font-size: 11px; font-weight: 800; color: white;
+}
+.sm-g { background: #4285F4; }
+.sm-m { background: #00A4EF; }
+.sm-g.sm, .sm-m.sm { width: 16px; height: 16px; font-size: 9px; }
+.sm-note {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 11px; color: var(--primary); font-weight: 700;
+}
+
+/* Org setup */
+.org-mock {
+  padding: 18px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  display: flex; flex-direction: column; gap: 12px;
+  box-shadow: var(--shadow-md);
+}
+.om-h { font-size: 14px; font-weight: 800; padding-bottom: 6px; border-bottom: 1px solid var(--border-soft); }
+.om-field { display: flex; flex-direction: column; gap: 6px; }
+.om-field label { font-size: 11px; font-weight: 700; color: var(--text-muted); }
+.om-input {
+  padding: 9px 12px;
+  background: var(--bg-soft);
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--text-main);
+}
+.om-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+.om-chip {
+  padding: 4px 10px;
+  background: var(--primary-light);
+  color: var(--primary);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+}
+.om-chip:last-child { background: white; border: 1px dashed var(--border); color: var(--text-muted); }
+.om-radio {
+  display: flex; align-items: center; gap: 8px;
+  padding: 8px 10px;
+  background: white;
+  border: 1.5px solid var(--border);
+  border-radius: 6px;
+  font-size: 12px;
+  color: var(--text-main);
+}
+.om-radio.sel { border-color: var(--primary); background: var(--primary-light); color: var(--primary); font-weight: 700; }
+.om-radio .rd {
+  width: 12px; height: 12px;
+  border: 1.5px solid var(--border); border-radius: 50%;
+}
+.om-radio.sel .rd { border-color: var(--primary); background: radial-gradient(circle, var(--primary) 50%, transparent 55%); }
+
+/* Invite */
+.invite-mock {
+  padding: 18px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  display: flex; flex-direction: column; gap: 10px;
+  box-shadow: var(--shadow-md);
+}
+.im-h { font-size: 14px; font-weight: 800; padding-bottom: 6px; border-bottom: 1px solid var(--border-soft); }
+.im-input {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 12px;
+  background: var(--bg-soft);
+  border: 1.5px solid var(--primary);
+  border-radius: 8px;
+  font-size: 12px;
+  color: var(--text-main);
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
+.im-add {
+  margin-left: auto;
+  font-size: 11px; font-weight: 700; color: var(--primary);
+}
+.im-domain {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 10px;
+  background: var(--primary-light);
+  border-radius: 6px;
+  font-size: 11px; color: var(--text-main);
+}
+.im-domain b { color: var(--primary); font-weight: 700; }
+.im-list { display: flex; flex-direction: column; gap: 6px; }
+.im-row {
+  display: flex; align-items: center; gap: 8px;
+  padding: 6px 8px;
+  background: var(--bg-soft);
+  border-radius: 6px;
+  font-size: 12px; color: var(--text-main);
+}
+.im-stat { margin-left: auto; font-size: 10px; color: var(--text-muted); font-weight: 600; }
+
+/* First doc */
+.firstdoc-mock {
+  padding: 18px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  display: flex; flex-direction: column; gap: 12px;
+  box-shadow: var(--shadow-md);
+}
+.fd-prompt {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 12px;
+  background: var(--primary-light);
+  border-radius: 8px;
+  font-size: 12px; color: var(--text-main); font-weight: 600;
+}
+.fd-progress {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 11px; color: var(--text-muted);
+}
+.fd-progress span:first-child { font-weight: 800; color: var(--primary); }
+.fd-bar {
+  flex: 1; height: 6px; background: var(--bg-mid); border-radius: 999px; overflow: hidden;
+}
+.fd-fill {
+  width: 75%; height: 100%;
+  background: linear-gradient(90deg, #00a886, var(--primary));
+}
+.fd-result {
+  padding: 12px 14px;
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.fd-result-h { font-size: 12px; font-weight: 800; color: var(--primary); }
+.fd-result-line { height: 6px; background: var(--bg-mid); border-radius: 3px; }
+.fd-result-line.short { width: 60%; }
+
+/* ============================================================== */
+/* OPTION A — 수직 타임라인 ===================================== */
+/* ============================================================== */
+.tlA {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.tlA-step {
+  display: grid;
+  grid-template-columns: 80px 1fr 1.2fr;
+  gap: 32px;
+  position: relative;
+  padding: 32px 0;
+  align-items: center;
+}
+
+/* 가운데 세로 라인 */
+.tlA-rail {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: stretch;
+  padding-top: 8px;
+}
+
+.tlA-rail::after {
+  content: "";
+  position: absolute;
+  top: 56px;
+  bottom: -32px;
+  width: 2px;
+  background: linear-gradient(180deg, var(--primary), var(--primary-light));
+}
+
+.tlA-step.last .tlA-rail::after {
+  background: linear-gradient(180deg, var(--primary), transparent);
+}
+
+.tlA-dot {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px; height: 48px;
+  border-radius: 50%;
+  background: white;
+  border: 2px solid var(--primary);
+  color: var(--primary);
+  font-size: 16px; font-weight: 800;
+  position: relative; z-index: 1;
+  box-shadow: 0 2px 8px -2px rgba(0,60,48,0.20);
+}
+.tlA-dot.done {
+  background: var(--primary);
+  color: white;
+}
+.tlA-dot.active {
+  background: var(--primary);
+  color: white;
+  box-shadow: 0 0 0 6px rgba(0,104,83,0.16), 0 4px 12px -2px rgba(0,60,48,0.30);
+  animation: tlAPulse 2s ease-in-out infinite;
+}
+@keyframes tlAPulse {
+  50% { box-shadow: 0 0 0 12px rgba(0,104,83,0.10), 0 4px 12px -2px rgba(0,60,48,0.30); }
+}
+
+.tlA-content { padding: 8px 0; }
+.tlA-meta {
+  font-size: 11px; font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  margin-bottom: 8px;
+}
+.tlA-meta b { color: var(--primary); }
+.tlA-step-title {
+  font-size: 22px; font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 8px;
+}
+.tlA-step-desc {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.65;
+}
+
+.tlA-mock { position: relative; }
+
+@media (max-width: 960px) {
+  .tlA-step {
+    grid-template-columns: 56px 1fr;
+    gap: 16px;
+  }
+  .tlA-mock { grid-column: 1 / -1; margin-top: 12px; }
+  .tlA-dot { width: 40px; height: 40px; font-size: 14px; }
+  .tlA-step-title { font-size: 18px; }
+}
+
+/* ============================================================== */
+/* PRICING ====================================================== */
+/* ============================================================== */
+.pricing-section {
+  padding: 100px 0 120px;
+  background: var(--bg-soft);
+}
+
+.pricing-head {
+  text-align: center;
+  max-width: 740px;
+  margin: 0 auto 56px;
+}
+
+.pricing-title {
+  font-size: clamp(32px, 4vw, 44px);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+  margin: 16px 0 14px;
+}
+
+.pricing-subtitle {
+  font-size: 16px;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+.pricing-subtitle b { color: var(--primary); }
+
+/* Plan grid */
+.pricing-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  align-items: stretch;
+}
+
+.plan {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  padding: 32px 28px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px -4px rgba(15,23,42,0.06);
+}
+
+.plan.featured {
+  border: 2px solid var(--primary);
+  box-shadow:
+    0 8px 24px -4px rgba(0,60,48,0.16),
+    0 24px 48px -12px rgba(0,60,48,0.12);
+  transform: translateY(-8px);
+}
+
+.plan-badge {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 5px 14px;
+  background:
+    radial-gradient(120% 90% at 0% 0%, rgba(255,255,255,0.20), transparent 55%),
+    linear-gradient(180deg, #008068, var(--primary));
+  color: white;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  box-shadow: 0 4px 12px -2px rgba(0,60,48,0.30);
+}
+
+.plan-h {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.plan-name {
+  font-size: 20px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--text-main);
+}
+
+.plan-tag {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-muted);
+  padding: 2px 8px;
+  background: var(--bg-soft);
+  border-radius: 4px;
+}
+
+.plan.featured .plan-tag {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+.plan-price {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+
+.plan-currency {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.plan-amount {
+  font-size: 38px;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-main);
+}
+
+.plan-unit {
+  font-size: 13px;
+  color: var(--text-muted);
+  font-weight: 500;
+  margin-left: 4px;
+}
+
+.plan-price-sub {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  padding: 8px 12px;
+  background: var(--bg-soft);
+  border-radius: 6px;
+  margin-bottom: 18px;
+}
+
+.plan-price-sub b {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.plan-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 22px;
+  padding-bottom: 22px;
+  border-bottom: 1px solid var(--border-soft);
+  line-height: 1.55;
+}
+
+.plan-cta {
+  display: block;
+  text-align: center;
+  padding: 12px 20px;
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.15s ease;
+  margin-bottom: 24px;
+  text-decoration: none;
+}
+
+.plan-cta-primary {
+  border: none;
+  color: white;
+  background:
+    radial-gradient(120% 90% at 0% 0%, rgba(255,255,255,0.18), transparent 55%),
+    linear-gradient(180deg, #008068, var(--primary));
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.22),
+    0 4px 12px -2px rgba(0,60,48,0.20);
+}
+.plan-cta-primary:hover { filter: brightness(1.06); }
+
+.plan-cta-outline {
+  background: white;
+  color: var(--text-main);
+  border: 1.5px solid var(--border);
+}
+.plan-features-h {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--text-muted);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 12px;
+}
+
+.plan-features {
+  list-style: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 0;
+  flex: 1;
+}
+
+.plan-features li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-main);
+  line-height: 1.5;
+}
+
+.plan-features svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* ============ ENTERPRISE PREMIUM CARD ============ */
+.plan-enterprise {
+  position: relative;
+  color: rgba(255,255,255,0.92);
+  border: 1px solid rgba(212,175,55,0.45);
+  background:
+    radial-gradient(120% 90% at 0% 0%, rgba(255,255,255,0.06), transparent 55%),
+    radial-gradient(circle at 90% 100%, rgba(212,175,55,0.15), transparent 60%),
+    linear-gradient(155deg, #0F2A24 0%, #07191A 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.10),
+    0 12px 32px -8px rgba(7,25,26,0.40),
+    0 32px 80px -20px rgba(7,25,26,0.50);
+}
+
+.plan-enterprise::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(212,175,55,0.10), transparent 60%);
+  pointer-events: none;
+}
+
+.plan-enterprise .plan-name {
+  color: white;
+  background: linear-gradient(180deg, #FFE9A8, #D4AF37);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.plan-enterprise .plan-amount,
+.plan-enterprise .plan-currency {
+  color: white;
+}
+
+.plan-enterprise .plan-unit,
+.plan-enterprise .plan-desc {
+  color: rgba(255,255,255,0.65);
+}
+
+.plan-enterprise .plan-price-sub {
+  background: rgba(212,175,55,0.10);
+  color: rgba(255,255,255,0.80);
+  border: 1px solid rgba(212,175,55,0.20);
+}
+
+.plan-enterprise .plan-price-sub b {
+  color: #FFD86B;
+}
+
+.plan-enterprise .plan-features-h {
+  color: rgba(212,175,55,0.85);
+}
+
+.plan-enterprise .plan-features li {
+  color: rgba(255,255,255,0.92);
+}
+
+.plan-enterprise .plan-features li b {
+  color: #FFD86B;
+}
+
+.plan-enterprise .plan-features svg {
+  color: #D4AF37;
+}
+
+.plan-enterprise .plan-desc {
+  border-bottom-color: rgba(255,255,255,0.10);
+}
+
+.plan-tag-gold {
+  background: rgba(212,175,55,0.18);
+  color: #FFD86B;
+}
+
+.plan-badge-gold {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background:
+    radial-gradient(120% 90% at 0% 0%, rgba(255,255,255,0.06), transparent 55%),
+    linear-gradient(155deg, #0F2A24 0%, #07191A 100%);
+  border: 1px solid rgba(212,175,55,0.45);
+  color: #FFD86B;
+  letter-spacing: 0.08em;
+}
+
+.plan-cta-gold {
+  position: relative;
+  border: none;
+  color: #1A1305;
+  background:
+    radial-gradient(120% 90% at 0% 0%, rgba(255,255,255,0.30), transparent 55%),
+    linear-gradient(180deg, #F4CB6A 0%, #D4AF37 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,0.40),
+    0 6px 18px -2px rgba(212,175,55,0.45);
+  overflow: hidden;
+}
+
+.plan-cta-gold::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(115deg, transparent 30%, rgba(255,255,255,0.5) 50%, transparent 70%);
+  transform: translateX(-120%);
+  transition: none;
+  pointer-events: none;
+}
+
+.plan-cta-gold:hover { filter: brightness(1.06); }
+
+.plan-cta-gold:hover::after {
+  transform: translateX(120%);
+  transition: transform 0.6s cubic-bezier(0.7, 0, 0.84, 0);
+}
+
+/* Footer note */
+.pricing-note {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 40px;
+  padding: 14px 18px;
+  background: white;
+  border: 1px dashed var(--border);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+
+@media (max-width: 960px) {
+  .pricing-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .plan.featured { transform: none; }
+  .plan.featured:hover { transform: translateY(-2px); }
+}
+
+/* ============ HERO ============ */
+.hero {
+  position: relative;
+  padding: 80px 0 100px;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 20% 0%, rgba(0,104,83,0.06), transparent 40%),
+    radial-gradient(circle at 80% 30%, rgba(0,104,83,0.05), transparent 40%),
+    var(--bg);
+}
+
+.hero-inner {
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+  gap: 60px;
+  align-items: center;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 12px;
+  background: var(--primary-light);
+  color: var(--primary);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+.hero-title {
+  font-size: clamp(36px, 5vw, 56px);
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.15;
+  margin: 18px 0;
+}
+
+.accent { color: var(--primary); }
+
+.hero-subtitle {
+  font-size: 17px;
+  color: var(--text-muted);
+  margin-bottom: 30px;
+  line-height: 1.6;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.hero-trust {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text-muted);
+}
+.trust-stars { display: inline-flex; gap: 2px; }
+
+/* ----- Mock Window (Hero Visual) ----- */
+.mock {
+  position: relative;
+  border-radius: 14px;
+  background: white;
+  box-shadow: var(--shadow-lg), 0 0 0 1px var(--border);
+  overflow: hidden;
+  transform: rotate(-1deg);
+}
+
+.mock-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 11px 14px;
+  background: var(--bg-soft);
+  border-bottom: 1px solid var(--border);
+}
+.mock-dot { width: 10px; height: 10px; border-radius: 50%; }
+.mock-url {
+  margin-left: 12px;
+  font-size: 12px;
+  color: var(--text-light);
+}
+
+.mock-body {
+  padding: 22px 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.mock-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mock-step {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 700;
+}
+.mock-step-num {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  font-size: 11px;
+}
+
+.mock-pill-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.mock-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+.mock-pill.selected {
+  background: var(--primary-light);
+  border-color: var(--primary);
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.mock-textarea {
+  padding: 14px;
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.mock-cta {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 11px;
+  border-radius: 8px;
+  background: linear-gradient(180deg, #008068, var(--primary));
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  box-shadow: 0 4px 12px -2px rgba(0,60,48,0.30);
+}
+
+/* ============ SECTION COMMON ============ */
+.section { padding: 96px 0; }
+.section-soft { background: var(--bg-soft); }
+
+.section-header {
+  text-align: center;
+  max-width: 680px;
+  margin: 0 auto 56px;
+}
+
+.section-title {
+  font-size: clamp(28px, 3.6vw, 40px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin: 14px 0 12px;
+}
+
+.section-subtitle {
+  font-size: 16px;
+  color: var(--text-muted);
+}
+
+/* ============ FEATURES ============ */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 18px;
+}
+
+.feature-card {
+  padding: 30px 28px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+}
+.feature-card:hover {
+  border-color: var(--primary);
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-md);
+}
+
+.feature-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--primary-light);
+  color: var(--primary);
+  margin-bottom: 18px;
+}
+
+.feature-title {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  margin-bottom: 10px;
+}
+
+.feature-desc {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.65;
+  margin-bottom: 18px;
+}
+
+.feature-bullets {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: auto;
+  padding-top: 18px;
+  border-top: 1px dashed var(--border);
+}
+
+.feature-bullets li {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  font-size: 13px;
+  color: var(--text-main);
+  line-height: 1.5;
+}
+
+.feature-bullets svg {
+  color: var(--primary);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* ============ MOCK UI COMMON ============ */
+.mock-tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 1px 7px;
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.mock-tag.green { background: var(--primary-light); color: var(--primary); }
+.mock-tag.amber { background: #FEF3C7; color: #B45309; }
+
+.mock-doc-ico {
+  display: inline-block;
+  width: 16px;
+  height: 16px;
+  background: var(--bg-mid);
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+/* ============ MOCK: DASHBOARD (Hero) ============ */
+.mock-dashboard {
+  padding: 16px;
+  background: var(--bg-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.mock-dash-title {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.mock-dash-stats {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr) 1.5fr;
+  gap: 6px;
+}
+
+.mock-stat-card {
+  background: white;
+  border-radius: 8px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--border);
+}
+
+.mock-stat-icon {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.mock-stat-icon.green { background: linear-gradient(135deg, #047857, #10B981); }
+.mock-stat-icon.teal { background: linear-gradient(135deg, #0F766E, #14B8A6); }
+.mock-stat-icon.orange { background: linear-gradient(135deg, #C2410C, #F97316); }
+.mock-stat-icon.yellow { background: linear-gradient(135deg, #A16207, #EAB308); }
+
+.mock-stat-info { flex: 1; min-width: 0; }
+.mock-stat-label { font-size: 9px; color: var(--text-muted); }
+.mock-stat-num { font-size: 13px; font-weight: 800; color: var(--text-main); }
+
+.mock-stat-card.alert {
+  flex-direction: column;
+  align-items: stretch;
+  background: #FFFBEB;
+  border-color: #FDE68A;
+  gap: 4px;
+  padding: 8px 10px;
+}
+.mock-alert-head {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  color: #B45309;
+}
+.mock-alert-count {
+  margin-left: auto;
+  background: #F59E0B;
+  color: white;
+  padding: 0 5px;
+  border-radius: 999px;
+  font-size: 9px;
+}
+.mock-alert-bullet { font-size: 9px; color: var(--text-muted); }
+
+.mock-dash-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.mock-dash-card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.mock-card-head {
+  font-size: 11px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.mock-doc-item,
+.mock-diary-item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  padding: 4px 0;
+}
+
+.mock-diary-ico {
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+.mock-diary-ico.green { background: var(--primary-light); }
+.mock-diary-ico.teal { background: #CCFBF1; }
+.mock-diary-title { font-size: 10px; font-weight: 600; }
+.mock-diary-sub { font-size: 9px; color: var(--text-muted); }
+
+/* ============ MOCK: AI 문서 생성 (Spotlight 1) ============ */
+.mock-aigen {
+  padding: 14px;
+  background: var(--bg-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mock-aigen-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.mock-guide-pill {
+  padding: 3px 9px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 10px;
+  color: var(--text-muted);
+}
+
+.mock-aigen-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr 1fr;
+  gap: 8px;
+}
+
+.mock-aigen-section {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.mock-step-head {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  padding-bottom: 6px;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.mock-step-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  font-size: 9px;
+  font-weight: 800;
+}
+
+.mock-type-row {
+  padding: 6px 8px;
+  font-size: 10px;
+  border-radius: 5px;
+  border: 1px solid transparent;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--text-muted);
+}
+.mock-type-row.selected {
+  background: var(--primary-light);
+  border-color: var(--primary);
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.mock-textbox {
+  padding: 8px 10px;
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  font-size: 10px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.mock-field-row { display: flex; gap: 4px; }
+.mock-field {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 7px;
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  font-size: 9px;
+  color: var(--text-main);
+}
+.mock-field-ico {
+  width: 8px;
+  height: 8px;
+  background: var(--text-light);
+  border-radius: 2px;
+}
+
+.mock-todo-head {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  margin-top: 4px;
+}
+.mock-pill-count {
+  background: var(--primary-light);
+  color: var(--primary);
+  padding: 0 5px;
+  border-radius: 999px;
+  font-size: 9px;
+}
+.mock-todo-line {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 6px;
+  background: var(--bg-soft);
+  border-radius: 4px;
+  font-size: 9px;
+}
+
+.mock-ref-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+}
+.mock-ref-cell {
+  aspect-ratio: 1;
+  background: var(--bg-soft);
+  border-radius: 5px;
+}
+.mock-ref-stats {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  padding-top: 6px;
+  border-top: 1px solid var(--border-soft);
+  text-align: center;
+}
+.mock-ref-stats div { display: flex; flex-direction: column; }
+.mock-ref-stats b { font-size: 14px; color: var(--primary); font-weight: 800; }
+.mock-ref-stats span { font-size: 8px; color: var(--text-muted); }
+
+.mock-aigen-footer {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+.mock-status-tag {
+  padding: 3px 8px;
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-muted);
+  margin-right: auto;
+}
+
+.mock-btn-secondary {
+  padding: 5px 10px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text-main);
+}
+
+.mock-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 10px;
+  background: linear-gradient(180deg, #008068, var(--primary));
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+/* ============ MOCK: 문서 편집기 (Spotlight 2) ============ */
+.mock-editor {
+  background: var(--bg-soft);
+  display: flex;
+  flex-direction: column;
+}
+
+.mock-editor-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: white;
+  border-bottom: 1px solid var(--border);
+}
+
+.mock-tool-chip {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+.mock-tool-grow { flex: 1; }
+.mock-tool-pill {
+  padding: 2px 8px;
+  background: var(--primary-light);
+  color: var(--primary);
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.mock-editor-grid {
+  display: grid;
+  grid-template-columns: 0.7fr 2fr 0.8fr;
+  gap: 0;
+}
+
+.mock-editor-side {
+  padding: 10px 8px;
+  background: white;
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mock-side-head {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.mock-side-line {
+  height: 6px;
+  background: var(--bg-mid);
+  border-radius: 3px;
+}
+.mock-side-line.short { width: 60%; }
+
+.mock-editor-body {
+  padding: 14px 16px;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mock-doc-h {
+  font-size: 14px;
+  font-weight: 800;
+  color: var(--text-main);
+}
+.mock-doc-meta {
+  font-size: 9px;
+  color: var(--text-muted);
+}
+
+.mock-doc-section {
+  font-size: 11px;
+  font-weight: 700;
+  margin-top: 6px;
+}
+
+.mock-stat-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.mock-mini-stat {
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.mock-mini-stat b {
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--primary);
+}
+.mock-mini-stat span {
+  font-size: 8px;
+  color: var(--text-muted);
+}
+
+.mock-table {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+.mock-table-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  padding: 5px 8px;
+  font-size: 9px;
+  border-bottom: 1px solid var(--border-soft);
+}
+.mock-table-row:last-child { border-bottom: none; }
+.mock-table-row.head {
+  background: var(--bg-soft);
+  font-weight: 700;
+  color: var(--text-muted);
+}
+
+.mock-editor-info {
+  padding: 10px 8px;
+  background: var(--bg-soft);
+  border-left: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.mock-info-tab {
+  font-size: 10px;
+  font-weight: 700;
+  padding: 4px 8px;
+  background: white;
+  border-radius: 4px;
+  width: fit-content;
+  border: 1px solid var(--border);
+}
+
+.mock-info-row {
+  font-size: 9px;
+  color: var(--text-main);
+  padding: 3px 4px;
+}
+
+.mock-info-divider {
+  height: 1px;
+  background: var(--border);
+  margin: 4px 0;
+}
+
+.mock-info-head {
+  font-size: 9px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-top: 4px;
+}
+
+.mock-info-line {
+  height: 5px;
+  background: var(--bg-mid);
+  border-radius: 3px;
+  margin-bottom: 3px;
+}
+.mock-info-line.short { width: 70%; }
+
+.mock-info-todo {
+  font-size: 9px;
+  color: var(--primary);
+  font-weight: 600;
+  padding: 2px 0;
+}
+
+/* ============ MOCK: 검색 (Spotlight 3) ============ */
+.mock-search {
+  padding: 14px;
+  background: var(--bg-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.mock-search-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  background: white;
+  border: 1.5px solid var(--primary);
+  border-radius: 8px;
+  font-size: 11px;
+  color: var(--text-main);
+}
+.mock-search-bar > span:first-of-type { flex: 1; }
+
+.mock-filter-pill {
+  padding: 3px 10px;
+  background: var(--primary-light);
+  color: var(--primary);
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.mock-ai-answer {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mock-ai-head { display: flex; }
+.mock-ai-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 8px;
+  background: var(--primary-light);
+  color: var(--primary);
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.mock-ai-text {
+  font-size: 11px;
+  line-height: 1.55;
+  color: var(--text-main);
+}
+
+.mock-cite-row { display: flex; gap: 6px; flex-wrap: wrap; }
+.mock-cite-pill {
+  padding: 4px 8px;
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.mock-search-list {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+}
+
+.mock-search-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border-soft);
+}
+.mock-search-row:last-child { border-bottom: none; }
+
+.mock-search-info { flex: 1; min-width: 0; }
+.mock-search-title {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+.mock-search-meta {
+  font-size: 9px;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
+
+/* ============ SCREENSHOT FRAME ============ */
+.screenshot-frame {
+  position: relative;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: var(--shadow-lg);
+}
+
+.screenshot-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 11px 14px;
+  background: var(--bg-soft);
+  border-bottom: 1px solid var(--border);
+}
+
+.screenshot-img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.spot-visual {
+  position: relative;
+}
+
+.spot-visual::before {
+  content: "";
+  position: absolute;
+  inset: -32px;
+  background: radial-gradient(circle at 50% 50%, rgba(0,104,83,0.10), transparent 60%);
+  z-index: -1;
+  pointer-events: none;
+}
+
+/* Hero visual: 살짝 기울이기 */
+.hero-visual .screenshot-frame {
+  transform: rotate(-1deg);
+}
+
+/* ============ USAGE FLOW (3-step) ============ */
+.usage-flow {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr auto 1fr;
+  gap: 16px;
+  align-items: stretch;
+  margin-bottom: 72px;
+}
+
+.usage-step {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 26px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: all 0.2s ease;
+}
+
+.usage-step:hover {
+  border-color: var(--primary);
+  box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+}
+
+.usage-step-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.usage-step-num {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: 0.06em;
+}
+
+.usage-step-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+.usage-step-title {
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.usage-step-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  margin-bottom: 4px;
+}
+
+.usage-step-mini {
+  margin-top: auto;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.usage-mini-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-muted);
+  width: fit-content;
+}
+.usage-mini-pill.selected {
+  background: var(--primary-light);
+  border-color: var(--primary);
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.usage-mini-text {
+  padding: 9px 12px;
+  background: var(--bg-soft);
+  border-radius: 8px;
+  font-size: 11px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.usage-mini-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: linear-gradient(180deg, #008068, var(--primary));
+  color: white;
+  border-radius: 8px;
+  font-size: 11px;
+  font-weight: 700;
+  width: fit-content;
+}
+
+.usage-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  opacity: 0.5;
+}
+
+/* Divider between flow & feature grid */
+.features-divider {
+  position: relative;
+  text-align: center;
+  margin: 0 0 40px;
+}
+
+.features-divider::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--border);
+}
+
+.features-divider span {
+  position: relative;
+  display: inline-block;
+  padding: 0 18px;
+  background: var(--bg-soft);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+/* ============ SPOTLIGHT ============ */
+.spotlight {
+  padding: 100px 0;
+}
+
+.spotlight-inner {
+  display: grid;
+  grid-template-columns: 1fr 1.05fr;
+  gap: 64px;
+  align-items: center;
+}
+
+.spotlight.reverse .spotlight-inner {
+  grid-template-columns: 1.05fr 1fr;
+}
+
+.spotlight.reverse .spotlight-content {
+  order: 2;
+}
+
+.spotlight-content .eyebrow {
+  margin-bottom: 16px;
+}
+
+.spotlight-title {
+  font-size: clamp(26px, 3.2vw, 36px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin-bottom: 18px;
+}
+
+.spotlight-desc {
+  font-size: 16px;
+  color: var(--text-muted);
+  line-height: 1.7;
+  margin-bottom: 26px;
+}
+
+.spotlight-bullets {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 28px;
+}
+
+.spotlight-bullets li {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.spotlight-bullet-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--primary-light);
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.spotlight-bullet-title {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+
+.spotlight-bullet-desc {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.55;
+}
+
+.spotlight-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--primary);
+  font-weight: 700;
+  font-size: 14px;
+}
+.spotlight-link:hover { gap: 8px; }
+
+/* Spotlight Visual (mock UI) */
+.spot-visual {
+  position: relative;
+}
+
+.spot-mock {
+  background: white;
+  border-radius: 14px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+  overflow: hidden;
+  position: relative;
+  z-index: 2;
+}
+
+.spot-visual::before {
+  content: "";
+  position: absolute;
+  inset: -20px;
+  background: radial-gradient(circle at 50% 50%, rgba(0,104,83,0.10), transparent 60%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.spot-mock-header {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-soft);
+}
+
+.spot-mock-header-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-main);
+}
+
+.spot-mock-header-tag {
+  margin-left: auto;
+  padding: 3px 8px;
+  background: var(--primary-light);
+  color: var(--primary);
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.spot-mock-body {
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* Mock A: AI 생성 흐름 */
+.spot-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 14px;
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 13px;
+}
+.spot-row.active {
+  background: var(--primary-light);
+  border-color: var(--primary);
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.spot-row-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: white;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+
+.spot-typing {
+  padding: 16px;
+  background: var(--bg-soft);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.6;
+  position: relative;
+}
+
+.spot-typing::after {
+  content: "▍";
+  color: var(--primary);
+  animation: caret 1s steps(2) infinite;
+}
+
+@keyframes caret {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+
+.spot-progress {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.spot-progress-bar {
+  flex: 1;
+  height: 6px;
+  background: var(--bg-mid);
+  border-radius: 999px;
+  overflow: hidden;
+}
+.spot-progress-fill {
+  width: 75%;
+  height: 100%;
+  background: linear-gradient(90deg, #00a886, var(--primary));
+  border-radius: 999px;
+}
+
+/* Mock B: 협업 */
+.spot-collab-doc {
+  padding: 16px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  position: relative;
+}
+
+.spot-collab-line {
+  height: 8px;
+  background: var(--bg-mid);
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+.spot-collab-line.short { width: 60%; }
+.spot-collab-line.medium { width: 85%; }
+
+.spot-collab-highlight {
+  display: inline-block;
+  padding: 4px 8px;
+  background: rgba(0,104,83,0.12);
+  border-bottom: 2px solid var(--primary);
+  border-radius: 3px;
+  font-size: 12px;
+  color: var(--primary);
+  font-weight: 600;
+  margin: 4px 0;
+}
+
+.spot-collab-cursor {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+.spot-collab-cursor::before {
+  content: "";
+  display: inline-block;
+  width: 2px;
+  height: 14px;
+  background: var(--primary);
+  border-radius: 1px;
+  margin-right: 2px;
+}
+.spot-collab-cursor span {
+  padding: 2px 8px;
+  background: var(--primary);
+  color: white;
+  border-radius: 4px;
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.spot-collab-comment {
+  display: flex;
+  gap: 10px;
+  padding: 12px 14px;
+  background: var(--bg-soft);
+  border-radius: 10px;
+}
+
+.spot-avatar-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+.spot-avatar-circle.alt { background: #F59E0B; }
+
+.spot-comment-content {
+  flex: 1;
+}
+.spot-comment-author {
+  font-size: 12px;
+  font-weight: 700;
+  margin-bottom: 2px;
+}
+.spot-comment-text {
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+/* Activity feed */
+.spot-activity {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.spot-activity-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-muted);
+}
+.spot-activity-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--primary);
+  flex-shrink: 0;
+}
+.spot-activity-time {
+  margin-left: auto;
+  font-size: 11px;
+  color: var(--text-light);
+}
+
+/* ============ HOW ============ */
+.steps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  position: relative;
+}
+
+.step-card {
+  padding: 32px 28px;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  position: relative;
+}
+
+.step-num {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: 0.05em;
+  margin-bottom: 14px;
+}
+
+.step-title {
+  font-size: 18px;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+.step-desc {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+/* ============ FINAL CTA ============ */
+.cta-section { padding: 80px 0; background: var(--bg-soft); }
+
+.cta-card {
+  position: relative;
+  padding: 64px 56px;
+  border-radius: 24px;
+  background:
+    radial-gradient(circle at 20% 20%, rgba(255,255,255,0.10), transparent 50%),
+    linear-gradient(135deg, #007a62, var(--primary) 60%, #004a3b);
+  color: white;
+  overflow: hidden;
+  box-shadow: 0 24px 48px -16px rgba(0,60,48,0.40);
+}
+
+.cta-glow {
+  position: absolute;
+  top: -100px;
+  right: -100px;
+  width: 360px;
+  height: 360px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255,255,255,0.18), transparent 70%);
+  pointer-events: none;
+}
+
+.cta-content { position: relative; text-align: center; }
+
+.cta-title {
+  font-size: clamp(24px, 3vw, 36px);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  margin-bottom: 12px;
+}
+
+.cta-subtitle {
+  font-size: 16px;
+  opacity: 0.9;
+  margin-bottom: 28px;
+}
+
+.cta-actions { display: inline-flex; gap: 12px; }
+
+/* ============ FOOTER ============ */
+.footer {
+  padding: 64px 0 32px;
+  background: #0F172A;
+  color: #94A3B8;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr 1fr;
+  gap: 40px;
+  padding-bottom: 48px;
+  border-bottom: 1px solid rgba(148,163,184,0.18);
+}
+
+.footer-brand .footer-logo {
+  height: 28px;
+  margin-bottom: 16px;
+  filter: brightness(0) invert(1) opacity(0.95);
+}
+
+.footer-tag {
+  font-size: 13px;
+  line-height: 1.6;
+  margin-bottom: 18px;
+}
+
+.footer-social { display: flex; gap: 12px; }
+.footer-social a {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(148,163,184,0.10);
+  transition: all 0.15s ease;
+}
+.footer-social a:hover {
+  background: var(--primary);
+  color: white;
+}
+
+.footer-col h4 {
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  margin-bottom: 14px;
+}
+
+.footer-col a {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 8px;
+  transition: color 0.15s ease;
+}
+.footer-col a:hover { color: white; }
+
+.footer-bottom {
+  padding-top: 24px;
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+}
+
+/* ============ RESPONSIVE ============ */
+@media (max-width: 960px) {
+  .hero { padding: 56px 0 72px; }
+  .hero-inner { grid-template-columns: 1fr; gap: 40px; }
+  .feature-grid, .pricing-grid { grid-template-columns: 1fr; }
+  .usage-flow {
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+  .usage-arrow { transform: rotate(90deg); padding: 6px 0; }
+  .plan-card.primary { transform: none; }
+  .footer-grid { grid-template-columns: 1fr 1fr; gap: 32px; }
+  .section { padding: 72px 0; }
+}
+
+@media (max-width: 640px) {
+  .nav-links { display: none; }
+  .menu-toggle { display: inline-flex; align-items: center; justify-content: center; }
+  .nav-actions .btn-link { display: none; }
+  .footer-grid { grid-template-columns: 1fr 1fr; }
+  .footer-bottom { flex-direction: column; gap: 6px; align-items: flex-start; }
+  .cta-card { padding: 40px 28px; }
+  .hero-actions, .cta-actions { flex-direction: column; align-items: stretch; }
+}
+
+/* ============================================================== */
+/* CONTACT ====================================================== */
+/* ============================================================== */
+.contact-section {
+  position: relative;
+  padding: 110px 0 130px;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(0, 104, 83, 0.06), transparent 45%),
+    radial-gradient(circle at 82% 100%, rgba(0, 104, 83, 0.05), transparent 50%),
+    var(--bg-soft);
+  overflow: hidden;
+}
+
+.contact-section::before {
+  content: "";
+  position: absolute;
+  top: 56px;
+  left: 50%;
+  width: 720px;
+  max-width: 90%;
+  height: 220px;
+  transform: translateX(-50%);
+  background: radial-gradient(closest-side, rgba(0, 104, 83, 0.10), transparent 70%);
+  filter: blur(14px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.contact-section .container {
+  position: relative;
+  z-index: 1;
+}
+
+.contact-head {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 52px;
+}
+
+.contact-title {
+  font-size: clamp(32px, 4vw, 44px);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+  margin: 16px 0 14px;
+  background: linear-gradient(180deg, #0F172A 0%, #1f2937 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.contact-subtitle {
+  font-size: 16px;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.contact-form {
+  position: relative;
+  max-width: 620px;
+  margin: 0 auto;
+  background: white;
+  border: 1px solid var(--border-soft);
+  border-radius: 20px;
+  padding: 40px 40px 36px;
+  box-shadow:
+    0 1px 2px rgba(15, 23, 42, 0.04),
+    0 12px 32px -10px rgba(15, 23, 42, 0.10),
+    0 32px 64px -20px rgba(15, 23, 42, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.contact-email-hero {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.contact-email-label {
+  font-size: 11px;
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: 0.14em;
+}
+
+.contact-email-field {
+  position: relative;
+}
+
+.contact-email-leading {
+  position: absolute;
+  left: 18px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  color: var(--text-light);
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  transition: color 0.2s ease;
+  pointer-events: none;
+}
+
+.contact-email-input {
+  width: 100%;
+  padding: 20px 22px 20px 50px;
+  font-size: 18px;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+  font-family: inherit;
+  color: var(--text-main);
+  background: var(--bg-soft);
+  border: 1.5px solid transparent;
+  border-radius: 14px;
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.contact-email-input::placeholder {
+  color: var(--text-light);
+  font-weight: 400;
+}
+
+.contact-email-input:focus {
+  outline: none;
+  background: white;
+  border-color: var(--primary);
+  box-shadow:
+    0 0 0 4px rgba(0, 104, 83, 0.10),
+    0 8px 20px -8px rgba(0, 104, 83, 0.25);
+}
+
+.contact-email-field:focus-within .contact-email-leading {
+  color: var(--primary);
+}
+
+.contact-email-hint {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.contact-email-hint svg {
+  width: 14px;
+  height: 14px;
+  flex: 0 0 14px;
+  color: var(--text-light);
+}
+
+.contact-form.is-expanded .contact-email-hint {
+  display: none;
+}
+
+.contact-extra-wrap {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  margin-top: 0;
+  transition: grid-template-rows 0.45s ease, opacity 0.35s ease, margin-top 0.35s ease;
+}
+
+.contact-extra {
+  overflow: hidden;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.contact-form.is-expanded .contact-extra-wrap {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  margin-top: 24px;
+}
+
+.contact-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.contact-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.contact-field label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  letter-spacing: 0.02em;
+}
+
+.contact-field input,
+.contact-field textarea {
+  width: 100%;
+  padding: 13px 15px;
+  border: 1.5px solid transparent;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 14px;
+  color: var(--text-main);
+  background: var(--bg-soft);
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.contact-field input::placeholder,
+.contact-field textarea::placeholder {
+  color: var(--text-light);
+}
+
+.contact-field input:focus,
+.contact-field textarea:focus {
+  outline: none;
+  background: white;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(0, 104, 83, 0.10);
+}
+
+.contact-field textarea {
+  resize: vertical;
+  min-height: 130px;
+  line-height: 1.6;
+}
+
+.contact-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 4px;
+  flex-wrap: wrap;
+}
+
+.contact-submit {
+  padding: 13px 24px;
+  border-radius: 10px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 6px 16px -4px rgba(0, 60, 48, 0.30);
+  transition: transform 0.15s ease, filter 0.15s ease, box-shadow 0.15s ease;
+}
+
+.contact-submit:hover {
+  transform: translateY(-1px);
+  filter: brightness(1.05);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    0 10px 22px -6px rgba(0, 60, 48, 0.32);
+}
+
+.contact-note {
+  font-size: 12.5px;
+  color: var(--text-muted);
+  margin: 0;
+  flex: 1;
+  min-width: 180px;
+  line-height: 1.5;
+}
+
+.contact-result {
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: var(--primary-light);
+  color: var(--primary);
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.55;
+}
+
+@media (max-width: 640px) {
+  .contact-section { padding: 80px 0 96px; }
+  .contact-section::before { display: none; }
+  .contact-row { grid-template-columns: 1fr; }
+  .contact-form { padding: 28px 22px; border-radius: 16px; }
+  .contact-email-input { font-size: 16px; padding: 16px 18px 16px 46px; }
+  .contact-email-leading { left: 16px; width: 18px; height: 18px; }
+}
+
+/* ============================================================== */
+/* SECURITY ===================================================== */
+/* ============================================================== */
+.security-section {
+  padding: 110px 0 120px;
+  background: var(--bg);
+}
+
+.security-head {
+  text-align: center;
+  max-width: 740px;
+  margin: 0 auto 56px;
+}
+
+.security-title {
+  font-size: clamp(30px, 3.6vw, 40px);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+  margin: 16px 0 14px;
+}
+
+.security-subtitle {
+  font-size: 16px;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.security-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  max-width: 960px;
+  margin: 0 auto;
+}
+
+.security-card {
+  position: relative;
+  display: flex;
+  gap: 16px;
+  padding: 24px 24px 22px;
+  background: white;
+  border: 1px solid var(--border-soft);
+  border-radius: 14px;
+  transition: border-color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.03);
+}
+
+.security-icon {
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  background: var(--primary-light);
+  color: var(--primary);
+}
+
+.security-icon svg {
+  width: 20px;
+  height: 20px;
+}
+
+.security-card h3 {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-main);
+  margin: 0 0 6px;
+  letter-spacing: -0.01em;
+}
+
+.security-card p {
+  font-size: 13.5px;
+  color: var(--text-muted);
+  line-height: 1.65;
+  margin: 0;
+  word-break: keep-all;
+}
+
+.security-enterprise {
+  max-width: 960px;
+  margin: 32px auto 0;
+  padding: 24px 28px;
+  border-radius: 14px;
+  background:
+    radial-gradient(120% 120% at 0% 0%, rgba(244, 203, 106, 0.10), transparent 55%),
+    linear-gradient(180deg, #0F172A 0%, #1f2937 100%);
+  color: #E2E8F0;
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 24px;
+  align-items: center;
+}
+
+.security-enterprise-h {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+  color: #F4CB6A;
+  white-space: nowrap;
+}
+
+.security-enterprise-h svg {
+  width: 14px;
+  height: 14px;
+}
+
+.security-enterprise-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px 24px;
+  font-size: 13px;
+  color: #CBD5E1;
+}
+
+.security-enterprise-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1.5;
+}
+
+.security-enterprise-list li::before {
+  content: "";
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: #F4CB6A;
+  flex: 0 0 4px;
+}
+
+@media (max-width: 760px) {
+  .security-grid { grid-template-columns: 1fr; }
+  .security-enterprise { grid-template-columns: 1fr; gap: 16px; }
+  .security-enterprise-list { grid-template-columns: 1fr 1fr; }
+}
+
+@media (max-width: 480px) {
+  .security-section { padding: 80px 0 88px; }
+  .security-enterprise-list { grid-template-columns: 1fr; }
+}
+
+/* ============================================================== */
+/* FAQ ========================================================== */
+/* ============================================================== */
+.faq-section {
+  padding: 100px 0 110px;
+  background: var(--bg-soft);
+}
+
+.faq-head {
+  text-align: center;
+  max-width: 720px;
+  margin: 0 auto 48px;
+}
+
+.faq-title {
+  font-size: clamp(30px, 3.6vw, 40px);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.2;
+  margin: 16px 0 14px;
+}
+
+.faq-subtitle {
+  font-size: 16px;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+
+.faq-list {
+  max-width: 760px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.faq-item {
+  background: white;
+  border: 1px solid var(--border-soft);
+  border-radius: 12px;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
+}
+
+.faq-item[open] {
+  border-color: var(--primary);
+  box-shadow: 0 8px 20px -10px rgba(0, 60, 48, 0.18);
+}
+
+.faq-item summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 18px 22px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-main);
+  letter-spacing: -0.01em;
+}
+
+.faq-item summary::-webkit-details-marker { display: none; }
+.faq-item summary::marker { display: none; }
+
+.faq-chevron {
+  width: 18px;
+  height: 18px;
+  flex: 0 0 18px;
+  color: var(--text-light);
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.faq-item[open] .faq-chevron {
+  transform: rotate(180deg);
+  color: var(--primary);
+}
+
+.faq-body {
+  padding: 0 22px 20px;
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.7;
+  word-break: keep-all;
+}
+
+.faq-body strong {
+  color: var(--text-main);
+  font-weight: 600;
+}
+
+@media (max-width: 640px) {
+  .faq-section { padding: 72px 0 80px; }
+  .faq-item summary { padding: 16px 18px; font-size: 14.5px; }
+  .faq-body { padding: 0 18px 18px; font-size: 13.5px; }
+}
+
+/* ============================================================== */
+/* FOOTER ======================================================= */
+/* ============================================================== */
+.site-footer {
+  position: relative;
+  padding: 88px 0 32px;
+  background:
+    radial-gradient(circle at 18% 0%, rgba(0, 104, 83, 0.12), transparent 50%),
+    radial-gradient(circle at 82% 100%, rgba(0, 104, 83, 0.06), transparent 55%),
+    linear-gradient(180deg, #0F172A 0%, #0a0f1c 100%);
+  color: #94A3B8;
+  overflow: hidden;
+  isolation: isolate;
+}
+
+.site-footer::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 360px;
+  max-width: 60%;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(0, 168, 132, 0.55), transparent);
+}
+
+.site-footer .container {
+  position: relative;
+  z-index: 1;
+}
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr 1fr 1fr;
+  gap: 48px;
+  padding-bottom: 44px;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.10);
+}
+
+.footer-brand .footer-logo {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 18px;
+}
+
+.footer-brand .footer-logo img {
+  height: 24px;
+  filter: brightness(0) invert(1);
+  opacity: 0.95;
+}
+
+.footer-desc {
+  font-size: 13px;
+  line-height: 1.75;
+  color: #94A3B8;
+  margin: 0 0 22px;
+  word-break: keep-all;
+  max-width: 320px;
+}
+
+.footer-contact {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 6px 6px 12px;
+  border: 1px solid rgba(148, 163, 184, 0.20);
+  border-radius: 999px;
+  font-size: 12.5px;
+  font-weight: 500;
+  color: #CBD5E1;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  cursor: text;
+}
+
+.footer-contact-email {
+  user-select: all;
+  -webkit-user-select: all;
+  padding-right: 4px;
+}
+
+.footer-contact-mail {
+  width: 14px;
+  height: 14px;
+  color: #2dd4a8;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  flex: 0 0 14px;
+}
+
+.footer-contact-copy {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  flex: 0 0 26px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(148, 163, 184, 0.10);
+  color: #94A3B8;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.15s ease;
+}
+
+.footer-contact-copy:hover {
+  background: rgba(0, 168, 132, 0.18);
+  color: #2dd4a8;
+}
+
+.footer-contact-copy:active {
+  transform: scale(0.94);
+}
+
+.footer-contact-copy svg {
+  position: absolute;
+  width: 13px;
+  height: 13px;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.footer-copy-check {
+  opacity: 0;
+  transform: scale(0.6);
+  color: #2dd4a8;
+}
+
+.footer-contact-copy.is-copied {
+  background: rgba(0, 168, 132, 0.22);
+  color: #2dd4a8;
+}
+
+.footer-contact-copy.is-copied .footer-copy-icon {
+  opacity: 0;
+  transform: scale(0.6);
+}
+
+.footer-contact-copy.is-copied .footer-copy-check {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.footer-copy-tip {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%) translateY(2px);
+  padding: 4px 10px;
+  background: #2dd4a8;
+  color: #0F172A;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}
+
+.footer-copy-tip::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 4px solid transparent;
+  border-top-color: #2dd4a8;
+}
+
+.footer-contact-copy.is-copied .footer-copy-tip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+.footer-col h4 {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  color: #F1F5F9;
+  margin: 0 0 18px;
+  text-transform: uppercase;
+}
+
+.footer-col ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.footer-col a {
+  position: relative;
+  display: inline-block;
+  font-size: 13.5px;
+  color: #94A3B8;
+  transition: color 0.18s ease;
+  width: fit-content;
+}
+
+.footer-col a::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 1px;
+  background: linear-gradient(90deg, var(--primary), #2dd4a8);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.22s ease;
+}
+
+.footer-col a:hover { color: #F1F5F9; }
+.footer-col a:hover::after { transform: scaleX(1); }
+
+.footer-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 22px;
+  font-size: 12px;
+  color: #64748B;
+  gap: 16px;
+}
+
+.footer-bottom-left {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.footer-bottom-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  color: #CBD5E1;
+  font-size: 11.5px;
+}
+
+.footer-bottom-mark::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #2dd4a8;
+  box-shadow: 0 0 10px rgba(45, 212, 168, 0.7);
+  animation: footerPulse 2.4s ease-in-out infinite;
+}
+
+@keyframes footerPulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 10px rgba(45, 212, 168, 0.7); }
+  50% { opacity: 0.6; box-shadow: 0 0 4px rgba(45, 212, 168, 0.3); }
+}
+
+.footer-bottom-tag {
+  color: #475569;
+  font-size: 11.5px;
+  letter-spacing: -0.005em;
+}
+
+@media (max-width: 760px) {
+  .site-footer { padding: 64px 0 24px; }
+  .footer-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 36px 24px;
+    padding-bottom: 32px;
+  }
+  .footer-brand { grid-column: 1 / -1; }
+  .footer-desc { max-width: none; }
+}
+
+@media (max-width: 480px) {
+  .footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
+
+/* ============ Lucide stroke base ============ */
+svg.icon, svg.icon-sm, svg.icon-lg {
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  stroke: currentColor;
+}
+</style>
+</head>
+<body>
+
+<!-- ============ NAV ============ -->
+<header class="nav">
+  <div class="container nav-inner">
+    <a href="#" class="logo"><img src="/brand/notive-logo_medium.png" alt="Notive" /></a>
+    <nav class="nav-links">
+      <a href="#intro">소개</a>
+      <a href="#features">기능</a>
+      <a href="#onboarding">시작 가이드</a>
+      <a href="#pricing">요금제</a>
+      <a href="#faq">FAQ</a>
+      <a href="#contact">문의</a>
+    </nav>
+    <div class="nav-actions">
+      <a href="/" class="btn btn-link">로그인</a>
+      <a href="/" class="btn btn-primary">
+        무료로 시작
+        <svg class="icon" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+      <button class="menu-toggle" aria-label="메뉴">
+        <svg class="icon-lg" viewBox="0 0 24 24"><path d="M3 12h18M3 6h18M3 18h18"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ============ 소개 (INTRO) ============ -->
+<section id="intro" class="intro">
+  <div class="container">
+    <div class="intro-header">
+      <span class="eyebrow">
+        <svg class="icon-sm" viewBox="0 0 24 24"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3z"/></svg>
+        회사 맥락 기반 AI
+      </span>
+      <h1 class="intro-title">
+        AI에게 회사를 매번<br />
+        설명하지 마세요.
+      </h1>
+      <p class="intro-subtitle">
+        Notive는 사내 다이어리, 회의록, To-do, 기존 문서를 자동으로 참고해<br />
+        매번 처음부터 시작하지 않고 <b>이미 진행한 업무</b>를 문서로 만듭니다.
+      </p>
+    </div>
+
+    <!-- 데이터 → AI → 문서 시각화 -->
+    <div class="intro-stage">
+      <!-- 1️⃣ 회사 데이터 소스 카드들 (떠있는 듯) -->
+      <div class="intro-sources">
+        <div class="src-card src-pos-1">
+          <span class="src-ico" style="background:#ECFDF5;color:#059669;">
+            <svg class="icon-sm" viewBox="0 0 24 24"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>
+          </span>
+          <div>
+            <div class="src-title">업무 일지</div>
+            <div class="src-meta">5월 1주 · 5건</div>
+          </div>
+        </div>
+
+        <div class="src-card src-pos-2">
+          <span class="src-ico" style="background:#EFF6FF;color:#2563EB;">
+            <svg class="icon-sm" viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/></svg>
+          </span>
+          <div>
+            <div class="src-title">최근 회의록</div>
+            <div class="src-meta">주간 마케팅 외 2건</div>
+          </div>
+        </div>
+
+        <div class="src-card src-pos-3">
+          <span class="src-ico" style="background:#FFFBEB;color:#D97706;">
+            <svg class="icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+          </span>
+          <div>
+            <div class="src-title">완료 To-do</div>
+            <div class="src-meta">8건</div>
+          </div>
+        </div>
+
+        <div class="src-card src-pos-4">
+          <span class="src-ico" style="background:#F3E8FF;color:#7C3AED;">
+            <svg class="icon-sm" viewBox="0 0 24 24"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          </span>
+          <div>
+            <div class="src-title">진행 프로젝트</div>
+            <div class="src-meta">신규 캠페인 v2</div>
+          </div>
+        </div>
+
+        <div class="src-card src-pos-5">
+          <span class="src-ico" style="background:#FEF2F2;color:#DC2626;">
+            <svg class="icon-sm" viewBox="0 0 24 24"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5z"/><polyline points="14 2 14 8 20 8"/></svg>
+          </span>
+          <div>
+            <div class="src-title">기존 사내 문서</div>
+            <div class="src-meta">유사 보고서 3건</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2️⃣ 흐름 (SVG curves) + AI 코어 -->
+      <div class="intro-flow">
+        <svg class="flow-svg" viewBox="0 0 800 200" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="flowGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#94A3B8" stop-opacity="0.4"/>
+              <stop offset="100%" stop-color="#006853" stop-opacity="0.9"/>
+            </linearGradient>
+          </defs>
+          <path d="M 80 0 Q 80 100, 400 180" stroke="url(#flowGrad)" stroke-width="1.5" fill="none" stroke-dasharray="4 6" class="flow-line"/>
+          <path d="M 240 0 Q 240 100, 400 180" stroke="url(#flowGrad)" stroke-width="1.5" fill="none" stroke-dasharray="4 6" class="flow-line"/>
+          <path d="M 400 0 L 400 180" stroke="url(#flowGrad)" stroke-width="1.5" fill="none" stroke-dasharray="4 6" class="flow-line"/>
+          <path d="M 560 0 Q 560 100, 400 180" stroke="url(#flowGrad)" stroke-width="1.5" fill="none" stroke-dasharray="4 6" class="flow-line"/>
+          <path d="M 720 0 Q 720 100, 400 180" stroke="url(#flowGrad)" stroke-width="1.5" fill="none" stroke-dasharray="4 6" class="flow-line"/>
+        </svg>
+
+        <div class="ai-core">
+          <div class="ai-core-glow"></div>
+          <div class="ai-core-ring"></div>
+          <div class="ai-core-inner">
+            <svg class="icon-lg" viewBox="0 0 24 24" style="color:white"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3z"/></svg>
+          </div>
+          <div class="ai-core-label">Notive AI</div>
+        </div>
+      </div>
+
+      <!-- 3️⃣ 흐름 (아래로 내려감) + 결과 문서 -->
+      <div class="intro-flow flow-down">
+        <svg class="flow-svg" viewBox="0 0 800 80" preserveAspectRatio="none">
+          <path d="M 400 0 L 400 80" stroke="url(#flowGrad)" stroke-width="1.5" fill="none" stroke-dasharray="4 6" class="flow-line"/>
+        </svg>
+      </div>
+
+      <div class="intro-result">
+        <div class="result-doc">
+          <div class="result-doc-bar">
+            <div class="result-bar-left">
+              <span class="result-doc-tab">2026년 5월 1주 · 주간 업무 보고서</span>
+              <span class="result-doc-meta">v1 · 자동 생성됨 · 12분 전</span>
+            </div>
+            <span class="result-doc-pill">
+              <svg class="icon-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+              초안 완성
+            </span>
+          </div>
+
+          <div class="result-doc-grid">
+            <!-- 좌측 목차 -->
+            <aside class="result-toc">
+              <div class="result-toc-head">목차</div>
+              <a class="result-toc-item active">1. 핵심 지표</a>
+              <a class="result-toc-item">2. 채널별 성과</a>
+              <a class="result-toc-item">3. 핵심 인사이트</a>
+              <a class="result-toc-item">4. 완료한 업무</a>
+              <a class="result-toc-item">5. 다음 주 계획</a>
+              <a class="result-toc-item">6. 리스크 · 이슈</a>
+            </aside>
+
+            <!-- 본문 -->
+            <div class="result-doc-body">
+              <div class="result-h">2026년 5월 1주차 마케팅 주간 보고서</div>
+              <div class="result-byline">
+                <span class="result-author">
+                  <span class="result-avatar">김</span>
+                  김지연 · 마케팅팀
+                </span>
+                <span class="result-byline-dot">·</span>
+                <span>2026.05.05 — 05.09</span>
+                <span class="result-byline-tag">주간</span>
+              </div>
+
+              <!-- 1. 핵심 지표 (KPI 4) -->
+              <div class="result-section-h">1. 핵심 지표</div>
+              <div class="result-kpis">
+                <div class="result-kpi">
+                  <div class="kpi-label">신규 리드</div>
+                  <div class="kpi-num">320<span>건</span></div>
+                  <div class="kpi-change up">▲ 14% vs 전주</div>
+                </div>
+                <div class="result-kpi">
+                  <div class="kpi-label">캠페인 ROI</div>
+                  <div class="kpi-num">218<span>%</span></div>
+                  <div class="kpi-change up">▲ 34%p vs 1Q</div>
+                </div>
+                <div class="result-kpi">
+                  <div class="kpi-label">SNS 전환율</div>
+                  <div class="kpi-num">3.9<span>%</span></div>
+                  <div class="kpi-change up">▲ 0.6%p</div>
+                </div>
+                <div class="result-kpi">
+                  <div class="kpi-label">총 매출</div>
+                  <div class="kpi-num">₩128<span>M</span></div>
+                  <div class="kpi-change up">▲ 14%</div>
+                </div>
+              </div>
+
+              <!-- 2. 채널별 성과 (table) -->
+              <div class="result-section-h">2. 채널별 성과</div>
+              <div class="result-table">
+                <div class="rt-row head">
+                  <span>채널</span>
+                  <span>방문</span>
+                  <span>전환율</span>
+                  <span>비용</span>
+                  <span>ROI</span>
+                </div>
+                <div class="rt-row hl">
+                  <span>SNS 광고 ⭐</span>
+                  <span>8,140</span>
+                  <span>3.9%</span>
+                  <span>₩42M</span>
+                  <span class="rt-strong">298%</span>
+                </div>
+                <div class="rt-row">
+                  <span>이메일</span>
+                  <span>3,012</span>
+                  <span>5.8%</span>
+                  <span>₩12M</span>
+                  <span class="rt-strong">214%</span>
+                </div>
+                <div class="rt-row">
+                  <span>오가닉</span>
+                  <span>2,300</span>
+                  <span>2.4%</span>
+                  <span>—</span>
+                  <span class="rt-strong">∞</span>
+                </div>
+              </div>
+
+              <!-- 3. 인사이트 콜아웃 -->
+              <div class="result-section-h">3. 핵심 인사이트</div>
+              <div class="result-insight">
+                <div class="insight-icon">
+                  <svg class="icon-sm" viewBox="0 0 24 24"><path d="M9 18h6M10 22h4M12 2a7 7 0 0 1 4 12.7c-.4.4-.7.9-.8 1.4l-.2 1.9H9l-.2-1.9c-.1-.5-.4-1-.8-1.4A7 7 0 0 1 12 2z"/></svg>
+                </div>
+                <div>
+                  <div class="insight-title">SNS 채널 ROI가 검색 채널 대비 <b>1.6배</b> 높음</div>
+                  <div class="insight-desc">2분기 마케팅 예산을 SNS 비중 <b>+15%p</b>로 재배분할 것을 권고합니다. 동일 예산 대비 추가 매출 <b>약 ₩18M</b> 예상.</div>
+                </div>
+              </div>
+
+              <!-- 4. 완료한 업무 -->
+              <div class="result-section-h">4. 완료한 업무</div>
+              <ul class="result-checklist">
+                <li><svg class="icon-sm" viewBox="0 0 24 24" style="color:var(--success)"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>2026 1Q 마케팅 회고록 정리 (월)</li>
+                <li><svg class="icon-sm" viewBox="0 0 24 24" style="color:var(--success)"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>고객 A사 미팅 · 제안 범위 합의 (화)</li>
+              </ul>
+
+              <!-- 5. 다음 주 계획 -->
+              <div class="result-section-h">5. 다음 주 계획</div>
+              <div class="result-plan">
+                <div class="plan-item">
+                  <span class="plan-prio p1">P1</span>
+                  <div class="plan-text">B2B 캠페인 설계 회의 · 신규 타깃 확정</div>
+                  <span class="plan-due">월 14:00</span>
+                </div>
+                <div class="plan-item">
+                  <span class="plan-prio p1">P1</span>
+                  <div class="plan-text">2분기 마케팅 예산 재배분안 작성 (SNS +15%p)</div>
+                  <span class="plan-due">화</span>
+                </div>
+              </div>
+
+              <!-- 6. 리스크 -->
+              <div class="result-section-h">6. 리스크 · 이슈</div>
+              <div class="result-risk">
+                <span class="risk-dot"></span>
+                <div>
+                  <div class="risk-title">5월 신규 캠페인 v2 — 디자인 일정 1주 지연 가능성</div>
+                  <div class="risk-desc">디자인팀 리소스 충돌. 5/13까지 우선순위 협의 필요.</div>
+                </div>
+              </div>
+
+              <!-- footer -->
+              <div class="result-cite">
+                <svg class="icon-sm" viewBox="0 0 24 24" style="color:var(--primary)"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2zM22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+                <span>이 보고서는 <b>다이어리 5건 · 회의록 2건 · To-do 8건 · 프로젝트 1건 · 기존 문서 3건</b>을 자동 참고해 작성됐습니다</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 기능 섹션 헤더 ============ -->
+<section id="features" class="features-head">
+  <div class="container">
+    <div class="features-head-inner">
+      <span class="eyebrow">기능</span>
+      <h2 class="features-head-title">방금 본 마법을<br />받쳐주는 진짜 시스템</h2>
+      <p class="features-head-subtitle">
+        AI 문서 생성은 시작입니다. Notive는 데이터 입력부터 검색·협업·운영까지<br />
+        조직이 실제로 굴러가도록 만든 통합 플랫폼입니다.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURE 1: 업무 일지 + To-do ============ -->
+<section class="feat-block">
+  <div class="container feat-grid">
+    <div class="feat-text">
+      <span class="feat-num">01</span>
+      <span class="eyebrow">업무 일지 · To-do</span>
+      <h3 class="feat-title">매일의 짧은 메모가<br />다음 주의 보고서가 됩니다.</h3>
+      <p class="feat-scene">
+        월요일 9시. 김지연 PM은 어제 회의 내용 한 줄을 다이어리에 적습니다.
+        같은 자리에서 To-do도 체크합니다. 그게 다입니다 — 금요일이 오면 AI가
+        한 주를 정리해 보고서로 만들어줍니다.
+      </p>
+      <ul class="feat-bullets">
+        <li>
+          <span class="feat-bullet-ico">
+            <svg class="icon-sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          <div>
+            <div class="feat-bullet-h">날짜별 다이어리 + 프로젝트·태그 연결</div>
+            <div class="feat-bullet-d">개인 기록과 팀 공유 기록 분리</div>
+          </div>
+        </li>
+        <li>
+          <span class="feat-bullet-ico">
+            <svg class="icon-sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          <div>
+            <div class="feat-bullet-h">To-do · 일정 자동 보고서 반영</div>
+            <div class="feat-bullet-d">완료한 항목과 마감일이 한 줄도 빠짐없이</div>
+          </div>
+        </li>
+        <li>
+          <span class="feat-bullet-ico">
+            <svg class="icon-sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          <div>
+            <div class="feat-bullet-h">"이 기록으로 보고서 만들기" 한 번에</div>
+            <div class="feat-bullet-d">캘린더 → 보고서 워크플로우 통합</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="feat-mock">
+      <div class="mock-frame">
+        <!-- 다이어리 + To-do mock -->
+        <div class="diary-mock">
+          <div class="diary-head">
+            <div class="diary-week">
+              <svg class="icon-sm" viewBox="0 0 24 24" style="color:var(--primary)"><path d="M8 2v4M16 2v4M3 10h18M5 4h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/></svg>
+              <span>5월 1주차 (5/5–5/9)</span>
+            </div>
+            <span class="diary-tag">5건</span>
+          </div>
+
+          <div class="diary-day done">
+            <span class="diary-day-name">월</span>
+            <div class="diary-day-text">신규 캠페인 v2 검토 회의 — 디자인팀 합류 결정</div>
+            <span class="diary-tag-mini">캠페인</span>
+          </div>
+          <div class="diary-day done">
+            <span class="diary-day-name">화</span>
+            <div class="diary-day-text">고객 A사 미팅 · 제안 범위 합의 (₩42M)</div>
+            <span class="diary-tag-mini">영업</span>
+          </div>
+          <div class="diary-day done">
+            <span class="diary-day-name">수</span>
+            <div class="diary-day-text">캠페인 결과 데이터 정리 (320 리드, ROI 218%)</div>
+            <span class="diary-tag-mini">분석</span>
+          </div>
+          <div class="diary-day done">
+            <span class="diary-day-name">목</span>
+            <div class="diary-day-text">디자인팀 크리에이티브 리뷰 — 2개 시안 확정</div>
+            <span class="diary-tag-mini">디자인</span>
+          </div>
+          <div class="diary-day editing">
+            <span class="diary-day-name today">금</span>
+            <div class="diary-day-text typing">월간 KPI 점검 · 회고 문서 정리▍</div>
+            <span class="diary-tag-mini live">작성 중</span>
+          </div>
+
+          <div class="diary-todos">
+            <div class="diary-todos-head">
+              <svg class="icon-sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+              <span>이번 주 To-do</span>
+              <span class="diary-todo-count">3 / 5</span>
+            </div>
+            <div class="diary-todo done">
+              <svg class="icon-sm" viewBox="0 0 24 24" style="color:var(--success)"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+              <span>캠페인 결과 리포트 작성</span>
+              <span class="diary-todo-due">완료</span>
+            </div>
+            <div class="diary-todo done">
+              <svg class="icon-sm" viewBox="0 0 24 24" style="color:var(--success)"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+              <span>5월 KPI 데이터 수집</span>
+              <span class="diary-todo-due">완료</span>
+            </div>
+            <div class="diary-todo">
+              <span class="diary-todo-check"></span>
+              <span>B2B 타깃 리스트 정리</span>
+              <span class="diary-todo-due p1">P1 · 월</span>
+            </div>
+            <div class="diary-todo">
+              <span class="diary-todo-check"></span>
+              <span>2분기 예산 재배분안 작성</span>
+              <span class="diary-todo-due p1">P1 · 화</span>
+            </div>
+          </div>
+
+          <button class="diary-cta">
+            <svg class="icon-sm" viewBox="0 0 24 24"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3z"/></svg>
+            이 기록으로 주간 보고서 만들기
+            <svg class="icon-sm" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURE 2: 사내 지식 검색 (역방향) ============ -->
+<section class="feat-block soft">
+  <div class="container feat-grid reverse">
+    <div class="feat-text">
+      <span class="feat-num">02</span>
+      <span class="eyebrow">사내 지식 검색</span>
+      <h3 class="feat-title">묻기만 하면 답이 나오고<br />근거 문서까지 따라옵니다.</h3>
+      <p class="feat-scene">
+        "지난 분기 마케팅 ROI 어땠지?" — 자연어로 물으면 AI가 답변과 함께 출처 문서 2건을
+        정확하게 짚어줍니다. 권한이 없는 문서는 검색 결과에 자동으로 빠집니다.
+      </p>
+      <ul class="feat-bullets">
+        <li>
+          <span class="feat-bullet-ico">
+            <svg class="icon-sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          <div>
+            <div class="feat-bullet-h">자연어 질문 + AI 요약 답변</div>
+            <div class="feat-bullet-d">제목·내용·태그뿐 아니라 의미로 검색</div>
+          </div>
+        </li>
+        <li>
+          <span class="feat-bullet-ico">
+            <svg class="icon-sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          <div>
+            <div class="feat-bullet-h">출처 문서 인용 표시</div>
+            <div class="feat-bullet-d">근거 문서를 클릭 한 번으로 열어 확인</div>
+          </div>
+        </li>
+        <li>
+          <span class="feat-bullet-ico">
+            <svg class="icon-sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          <div>
+            <div class="feat-bullet-h">권한 인지 검색</div>
+            <div class="feat-bullet-d">접근 가능한 문서만 결과·답변에 포함</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="feat-mock">
+      <div class="mock-frame">
+        <div class="search-mock">
+          <div class="search-bar-row">
+            <svg class="icon-sm" viewBox="0 0 24 24" style="color:var(--text-muted)"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+            <span class="search-q">지난 분기 마케팅 ROI 어땠지?</span>
+            <span class="search-filter">필터</span>
+          </div>
+
+          <div class="search-ai">
+            <div class="search-ai-head">
+              <span class="search-ai-badge">
+                <svg class="icon-sm" viewBox="0 0 24 24"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3z"/></svg>
+                AI 요약
+              </span>
+              <span class="search-ai-time">0.6초</span>
+            </div>
+            <div class="search-ai-body">
+              2026년 1분기 마케팅 캠페인 평균 ROI는 <b>218%</b>로
+              직전 분기 대비 <b>▲34%p</b> 증가했습니다.
+              SNS·검색 채널이 전체 매출의 78%를 견인했습니다.
+            </div>
+            <div class="search-cite-row">
+              <a class="search-cite">
+                <svg class="icon-sm" viewBox="0 0 24 24" style="color:var(--primary)"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5z"/><polyline points="14 2 14 8 20 8"/></svg>
+                2026 1Q 마케팅 회고록
+              </a>
+              <a class="search-cite">
+                <svg class="icon-sm" viewBox="0 0 24 24" style="color:var(--primary)"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5z"/><polyline points="14 2 14 8 20 8"/></svg>
+                채널별 ROI 비교 시트
+              </a>
+            </div>
+          </div>
+
+          <div class="search-list-head">
+            <span>검색 결과</span>
+            <span class="search-list-count">12건</span>
+          </div>
+
+          <div class="search-row">
+            <span class="search-row-ico">
+              <svg class="icon-sm" viewBox="0 0 24 24" style="color:var(--text-muted)"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5z"/><polyline points="14 2 14 8 20 8"/></svg>
+            </span>
+            <div class="search-row-info">
+              <div class="search-row-title">2026 1Q 마케팅 회고록</div>
+              <div class="search-row-meta">마케팅팀 · 김지연 · 3일 전</div>
+            </div>
+            <span class="mock-tag green">최종</span>
+          </div>
+          <div class="search-row">
+            <span class="search-row-ico">
+              <svg class="icon-sm" viewBox="0 0 24 24" style="color:var(--text-muted)"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5z"/><polyline points="14 2 14 8 20 8"/></svg>
+            </span>
+            <div class="search-row-info">
+              <div class="search-row-title">채널별 ROI 비교 시트</div>
+              <div class="search-row-meta">마케팅팀 · 박민수 · 1주 전</div>
+            </div>
+            <span class="mock-tag green">최종</span>
+          </div>
+          <div class="search-row">
+            <span class="search-row-ico">
+              <svg class="icon-sm" viewBox="0 0 24 24" style="color:var(--text-muted)"><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5z"/><polyline points="14 2 14 8 20 8"/></svg>
+            </span>
+            <div class="search-row-info">
+              <div class="search-row-title">1Q OKR 리뷰 보고서</div>
+              <div class="search-row-meta">경영지원팀 · 2주 전</div>
+            </div>
+            <span class="mock-tag amber">검토중</span>
+          </div>
+
+          <div class="search-perm-note">
+            <svg class="icon-sm" viewBox="0 0 24 24" style="color:var(--text-muted)"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            권한 없는 문서 <b>3건</b>은 자동 필터링되었습니다
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FEATURE 3: 협업 · 권한 · 관리자 ============ -->
+<section class="feat-block">
+  <div class="container feat-grid">
+    <div class="feat-text">
+      <span class="feat-num">03</span>
+      <span class="eyebrow">협업 · 권한 · 관리자</span>
+      <h3 class="feat-title">개인의 도구가 아닙니다.<br />조직 단위로 운영됩니다.</h3>
+      <p class="feat-scene">
+        문서 하나에 3명이 동시에 들어와 편집하고, 코멘트로 의견을 나눕니다.
+        팀 리더는 권한 범위를 정합니다 — 누가 편집할지, 누가 보기만 할지, 외부 공유는 차단할지.
+        관리자는 조직 전체의 사용 현황을 한 화면에서 모니터링합니다.
+      </p>
+      <ul class="feat-bullets">
+        <li>
+          <span class="feat-bullet-ico">
+            <svg class="icon-sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          <div>
+            <div class="feat-bullet-h">실시간 동시 편집 + 인라인 코멘트</div>
+            <div class="feat-bullet-d">커서·선택 영역 동기화, 활동 이력 자동 기록</div>
+          </div>
+        </li>
+        <li>
+          <span class="feat-bullet-ico">
+            <svg class="icon-sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          <div>
+            <div class="feat-bullet-h">4단계 역할 권한 (Viewer · Editor · Manager · Admin)</div>
+            <div class="feat-bullet-d">개인·팀·부서·프로젝트 단위 공유, 외부 공유 차단</div>
+          </div>
+        </li>
+        <li>
+          <span class="feat-bullet-ico">
+            <svg class="icon-sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </span>
+          <div>
+            <div class="feat-bullet-h">관리자 대시보드 + 감사 로그</div>
+            <div class="feat-bullet-d">사용자 초대, 회사 템플릿 등록, 사용량 모니터링</div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+    <div class="feat-mock">
+      <div class="mock-frame">
+        <div class="collab-mock">
+          <div class="collab-head">
+            <div class="collab-doc-name">📄 2026 1분기 경영 보고서</div>
+            <div class="collab-presence">
+              <span class="presence-avatar" style="background:var(--primary)">김</span>
+              <span class="presence-avatar" style="background:#F59E0B;margin-left:-6px;">박</span>
+              <span class="presence-avatar" style="background:#7C3AED;margin-left:-6px;">이</span>
+              <span class="presence-label">3명 편집 중</span>
+            </div>
+          </div>
+
+          <div class="collab-doc">
+            <div class="collab-line"></div>
+            <div class="collab-line short"></div>
+            <div class="collab-doc-emph">
+              <span class="collab-highlight">캠페인 ROI 218%</span>
+              <span class="collab-cursor"><span class="collab-cursor-bar"></span><span class="collab-cursor-tag">김지연</span></span>
+            </div>
+            <div class="collab-line"></div>
+            <div class="collab-line short"></div>
+          </div>
+
+          <div class="collab-comment">
+            <span class="presence-avatar small" style="background:#F59E0B">박</span>
+            <div class="collab-comment-body">
+              <div class="collab-comment-author">박민수 <span>· 1분 전</span></div>
+              <div class="collab-comment-text">이 ROI 출처 링크도 같이 첨부해주세요!</div>
+              <div class="collab-comment-actions">
+                <span>답글</span><span>해결</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 권한 모달 (떠있는 형태) -->
+          <div class="collab-share-modal">
+            <div class="share-modal-head">
+              <svg class="icon-sm" viewBox="0 0 24 24" style="color:var(--primary)"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
+              <span>공유 · 권한</span>
+              <span class="share-modal-close">✕</span>
+            </div>
+            <div class="share-row">
+              <span class="presence-avatar small" style="background:var(--primary)">김</span>
+              <div class="share-row-info">
+                <div class="share-row-name">김지연</div>
+                <div class="share-row-sub">마케팅팀 · 본인</div>
+              </div>
+              <span class="share-role">소유자</span>
+            </div>
+            <div class="share-row">
+              <span class="presence-avatar small" style="background:#F59E0B">박</span>
+              <div class="share-row-info">
+                <div class="share-row-name">박민수</div>
+                <div class="share-row-sub">기획팀</div>
+              </div>
+              <span class="share-role select">편집자 ▾</span>
+            </div>
+            <div class="share-row">
+              <span class="presence-avatar small" style="background:var(--bg-mid);color:var(--text-muted)">👥</span>
+              <div class="share-row-info">
+                <div class="share-row-name">마케팅팀 (12명)</div>
+                <div class="share-row-sub">팀 단위 공유</div>
+              </div>
+              <span class="share-role select">뷰어 ▾</span>
+            </div>
+            <div class="share-modal-foot">
+              <svg class="icon-sm" viewBox="0 0 24 24" style="color:#DC2626"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+              <span>외부 공유 <b>차단됨</b> · 다운로드 <b>제한</b></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 가입 절차 (수직 타임라인) ============ -->
+<section id="onboarding" class="onb-section">
+  <div class="container">
+    <div class="onb-head">
+      <span class="eyebrow">시작하기</span>
+      <h2 class="onb-title"><span class="accent">3분</span>이면 첫 보고서가 나옵니다.</h2>
+      <p class="onb-subtitle">복잡한 설정도, 신용카드 입력도 없습니다. 4단계만 따라오세요.</p>
+    </div>
+
+    <div class="tlA">
+      <!-- Step 1 -->
+      <div class="tlA-step">
+        <div class="tlA-rail">
+          <span class="tlA-dot done">1</span>
+        </div>
+        <div class="tlA-content">
+          <div class="tlA-meta">STEP 01 · <b>30초</b></div>
+          <h3 class="tlA-step-title">가입한다</h3>
+          <p class="tlA-step-desc">이메일 또는 구글·MS 계정으로 한 번에. 신용카드 입력 불필요.</p>
+        </div>
+        <div class="tlA-mock">
+          <div class="signup-mock">
+            <div class="sm-h">Notive 가입</div>
+            <div class="sm-input"><span>이메일</span>name@company.com</div>
+            <div class="sm-divider"><span>또는</span></div>
+            <button class="sm-sso"><span class="sm-g">G</span>Google로 계속하기</button>
+            <button class="sm-sso"><span class="sm-m">M</span>Microsoft로 계속하기</button>
+            <div class="sm-note"><svg class="icon-sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>14일 무료 · 신용카드 X</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 2 -->
+      <div class="tlA-step">
+        <div class="tlA-rail">
+          <span class="tlA-dot done">2</span>
+        </div>
+        <div class="tlA-content">
+          <div class="tlA-meta">STEP 02 · <b>1분</b></div>
+          <h3 class="tlA-step-title">조직을 만든다</h3>
+          <p class="tlA-step-desc">회사명·부서를 입력하고 회사 양식을 한 가지 선택. 나중에 다 바꿀 수 있어요.</p>
+        </div>
+        <div class="tlA-mock">
+          <div class="org-mock">
+            <div class="om-h">조직 설정</div>
+            <div class="om-field"><label>회사명</label><div class="om-input">ACME 주식회사</div></div>
+            <div class="om-field"><label>부서</label>
+              <div class="om-chips"><span class="om-chip">마케팅팀</span><span class="om-chip">기획팀</span><span class="om-chip">+ 추가</span></div>
+            </div>
+            <div class="om-field"><label>회사 양식</label>
+              <div class="om-radio sel"><span class="rd"></span>한국 기업 표준 (주간보고·회의록·SOP)</div>
+              <div class="om-radio"><span class="rd"></span>스타트업 가벼운 양식</div>
+              <div class="om-radio"><span class="rd"></span>나중에 등록</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 3 -->
+      <div class="tlA-step">
+        <div class="tlA-rail">
+          <span class="tlA-dot done">3</span>
+        </div>
+        <div class="tlA-content">
+          <div class="tlA-meta">STEP 03 · <b>30초 (선택)</b></div>
+          <h3 class="tlA-step-title">팀을 부른다</h3>
+          <p class="tlA-step-desc">이메일 한 줄이면 끝. 회사 도메인은 자동으로 인식해서 같은 조직으로 묶어줍니다.</p>
+        </div>
+        <div class="tlA-mock">
+          <div class="invite-mock">
+            <div class="im-h">팀 초대</div>
+            <div class="im-input">park@acme.co.kr, lee@acme.co.kr<span class="im-add">+ 추가</span></div>
+            <div class="im-domain">
+              <svg class="icon-sm" viewBox="0 0 24 24" style="color:var(--primary)"><polyline points="20 6 9 17 4 12"/></svg>
+              <b>@acme.co.kr</b> 도메인 자동 인식 — 같은 조직으로 묶입니다
+            </div>
+            <div class="im-list">
+              <div class="im-row"><span class="presence-avatar small" style="background:#F59E0B">박</span>박민수<span class="im-stat">초대 보냄</span></div>
+              <div class="im-row"><span class="presence-avatar small" style="background:#7C3AED">이</span>이서연<span class="im-stat">초대 보냄</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Step 4 -->
+      <div class="tlA-step last">
+        <div class="tlA-rail">
+          <span class="tlA-dot active">4</span>
+        </div>
+        <div class="tlA-content">
+          <div class="tlA-meta">STEP 04 · <b>1분</b></div>
+          <h3 class="tlA-step-title">첫 문서를 받는다</h3>
+          <p class="tlA-step-desc">"이번 주 업무보고 작성해줘" — 한 줄만 적으면 AI가 회사 양식대로 초안을 완성합니다.</p>
+        </div>
+        <div class="tlA-mock">
+          <div class="firstdoc-mock">
+            <div class="fd-prompt">
+              <svg class="icon-sm" viewBox="0 0 24 24" style="color:var(--primary)"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3z"/></svg>
+              이번 주 업무보고 작성해줘
+            </div>
+            <div class="fd-progress"><span>AI 작성 중</span><div class="fd-bar"><div class="fd-fill"></div></div><span>23초</span></div>
+            <div class="fd-result">
+              <div class="fd-result-h">2026년 5월 1주차 보고서 ✓</div>
+              <div class="fd-result-line"></div>
+              <div class="fd-result-line short"></div>
+              <div class="fd-result-line"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 요금제 ============ -->
+<section id="pricing" class="pricing-section">
+  <div class="container">
+    <div class="pricing-head">
+      <span class="eyebrow">요금제</span>
+      <h2 class="pricing-title">조직 규모에 맞는 방식으로 시작하세요.</h2>
+      <p class="pricing-subtitle">
+        팀 규모와 사용 시나리오에 맞춰 도입 방식을 안내해드립니다.<br />
+        먼저 시작해보고 필요한 시점에 상담을 신청하셔도 됩니다.
+      </p>
+    </div>
+
+    <div class="pricing-grid">
+      <!-- Plan 1: Free -->
+      <div class="plan">
+        <div class="plan-h">
+          <div class="plan-name">Free</div>
+          <div class="plan-tag">개인 · 평가용</div>
+        </div>
+        <div class="plan-price">
+          <span class="plan-amount">무료</span>
+        </div>
+        <p class="plan-desc">Notive를 직접 사용해보고 싶은 개인 사용자</p>
+        <a href="/" class="plan-cta plan-cta-outline">바로 시작</a>
+        <div class="plan-features-h">포함 기능</div>
+        <ul class="plan-features">
+          <li><svg class="icon-sm" viewBox="0 0 24 24" style="color:var(--primary)"><polyline points="20 6 9 17 4 12"/></svg><b>AI 사용량 — 적은 한도</b></li>
+          <li><svg class="icon-sm" viewBox="0 0 24 24" style="color:var(--primary)"><polyline points="20 6 9 17 4 12"/></svg>업무 일지·To-do·일정</li>
+          <li><svg class="icon-sm" viewBox="0 0 24 24" style="color:var(--primary)"><polyline points="20 6 9 17 4 12"/></svg>중앙 문서 저장 (1GB)</li>
+          <li><svg class="icon-sm" viewBox="0 0 24 24" style="color:var(--primary)"><polyline points="20 6 9 17 4 12"/></svg>기본 문서 템플릿 5종</li>
+          <li><svg class="icon-sm" viewBox="0 0 24 24" style="color:var(--primary)"><polyline points="20 6 9 17 4 12"/></svg>문서 검색 (제목·본문·태그)</li>
+        </ul>
+      </div>
+
+      <!-- Plan 2: Team (Recommended) -->
+      <div class="plan featured">
+        <span class="plan-badge">가장 인기</span>
+        <div class="plan-h">
+          <div class="plan-name">Team</div>
+          <div class="plan-tag">조직 도입</div>
+        </div>
+        <div class="plan-price">
+          <span class="plan-currency">₩</span>
+          <span class="plan-amount">29,000</span>
+          <span class="plan-unit">/ 사용자 / 월</span>
+        </div>
+        <div class="plan-price-sub">
+          1명당 <b>₩29,000</b> — 인원이 늘면 그만큼 비례 증가
+        </div>
+        <p class="plan-desc">팀 전체가 함께 문서를 만들고 정리하는 조직</p>
+        <a href="#contact" class="plan-cta plan-cta-primary">도입 상담 신청</a>
+        <div class="plan-features-h">Free 기능 + 추가</div>
+        <ul class="plan-features">
+          <li><svg class="icon-sm" viewBox="0 0 24 24" style="color:var(--primary)"><polyline points="20 6 9 17 4 12"/></svg><b>AI 사용량 — Free의 5배</b></li>
+          <li><svg class="icon-sm" viewBox="0 0 24 24" style="color:var(--primary)"><polyline points="20 6 9 17 4 12"/></svg>AI 맞춤형 보고서 생성(회사 문서, 업무 일지·To-do 기반)</li>
+          <li><svg class="icon-sm" viewBox="0 0 24 24" style="color:var(--primary)"><polyline points="20 6 9 17 4 12"/></svg>AI 통합 검색 (자연어 질문 + 회사 문서 기반 답변)</li>          
+          <li><svg class="icon-sm" viewBox="0 0 24 24" style="color:var(--primary)"><polyline points="20 6 9 17 4 12"/></svg>팀 단위 공유 · 검토 · 승인 시스템</li>
+          <li><svg class="icon-sm" viewBox="0 0 24 24" style="color:var(--primary)"><polyline points="20 6 9 17 4 12"/></svg>역할 기반 권한</li>
+          <li><svg class="icon-sm" viewBox="0 0 24 24" style="color:var(--primary)"><polyline points="20 6 9 17 4 12"/></svg>저장 용량 사용자당 50GB</li>
+        </ul>
+      </div>
+
+      <!-- Plan 3: Enterprise (Premium dark style) -->
+      <div class="plan plan-enterprise">
+        <span class="plan-badge plan-badge-gold">
+          <svg class="icon-sm" viewBox="0 0 24 24"><path d="m12 2 2.4 7.4H22l-6 4.4 2.3 7.2L12 16.6 5.7 21l2.3-7.2-6-4.4h7.6z"/></svg>
+          ENTERPRISE
+        </span>
+        <div class="plan-h">
+          <div class="plan-name">Enterprise</div>
+          <div class="plan-tag plan-tag-gold">대규모 · 보안 환경</div>
+        </div>
+        <div class="plan-price">
+          <span class="plan-amount">맞춤</span>
+          <span class="plan-unit">/ 협의</span>
+        </div>
+        <div class="plan-price-sub">사용 규모·보안 요건에 따라 별도 산정</div>
+        <p class="plan-desc">사내망·전용 보안 환경이 필요한 대규모 조직</p>
+        <a href="#contact" class="plan-cta plan-cta-gold">도입 상담 신청</a>
+        <div class="plan-features-h">Team 기능 + 추가</div>
+        <ul class="plan-features">
+          <li><svg class="icon-sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg><b>AI 사용량 — Team의 10배</b></li>
+          <li><svg class="icon-sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>On-Premise · VPC 단독 환경 구성</li>
+          <li><svg class="icon-sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>SSO · 도메인 통합 (SAML, OIDC)</li>
+          <li><svg class="icon-sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>SCIM 기반 사용자 자동 동기화</li>
+          <li><svg class="icon-sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>외부 협업 도구 연동 (Slack · Teams · Google Workspace)</li>
+          <li><svg class="icon-sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>전담 매니저 · 분기별 보안 보고서</li>
+          <li><svg class="icon-sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>전용 SLA · 폐쇄망 환경 대응</li>
+          <li><svg class="icon-sm" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>저장 용량 무제한</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="pricing-note">
+      <svg class="icon-sm" viewBox="0 0 24 24" style="color:var(--primary)"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="8"/></svg>
+      <span>플랜 변경은 언제든 가능하며, 정확한 비용은 도입 상담에서 안내해드립니다.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SECURITY ============ -->
+<section id="security" class="security-section">
+  <div class="container">
+    <div class="security-head">
+      <span class="eyebrow">보안 &amp; 데이터</span>
+      <h2 class="security-title">권한이 곧 AI의 경계입니다.</h2>
+      <p class="security-subtitle">
+        문서 권한, 검색, AI 생성에 같은 기준이 적용됩니다.<br />
+        볼 수 없는 자료는 검색 결과나 AI 참고 자료로 노출되지 않습니다.
+      </p>
+    </div>
+
+    <div class="security-grid">
+      <div class="security-card">
+        <div class="security-icon">
+          <svg viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        </div>
+        <div>
+          <h3>서버 기준 권한 판단</h3>
+          <p>모든 보호 API와 데이터 조회 단계에서 서버가 최종 권한을 검증합니다. UI에 메뉴가 없더라도 직접 URL 접근은 다시 차단됩니다.</p>
+        </div>
+      </div>
+
+      <div class="security-card">
+        <div class="security-icon">
+          <svg viewBox="0 0 24 24"><path d="M12 2 4 6v6c0 5 3.5 9 8 10 4.5-1 8-5 8-10V6z"/></svg>
+        </div>
+        <div>
+          <h3>조직 경계 분리</h3>
+          <p>모든 리소스는 조직 단위로 격리되어 저장됩니다. 사용자는 자신이 Active 멤버로 속한 조직의 데이터만 접근할 수 있습니다.</p>
+        </div>
+      </div>
+
+      <div class="security-card">
+        <div class="security-icon">
+          <svg viewBox="0 0 24 24"><path d="m12 3-1.9 5.8a2 2 0 0 1-1.3 1.3L3 12l5.8 1.9a2 2 0 0 1 1.3 1.3L12 21l1.9-5.8a2 2 0 0 1 1.3-1.3L21 12l-5.8-1.9a2 2 0 0 1-1.3-1.3z"/></svg>
+        </div>
+        <div>
+          <h3>AI에도 동일 권한 적용</h3>
+          <p>AI 생성에 사용되는 자료는 사용자가 접근 가능한 자료로만 제한됩니다. 권한 없는 문서는 검색 결과나 참고 자료에 포함되지 않습니다.</p>
+        </div>
+      </div>
+
+      <div class="security-card">
+        <div class="security-icon">
+          <svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14c0 1.7 4 3 9 3s9-1.3 9-3V5"/><path d="M3 12c0 1.7 4 3 9 3s9-1.3 9-3"/></svg>
+        </div>
+        <div>
+          <h3>학습 미사용 원칙</h3>
+          <p>고객 데이터는 명시적 동의 없이는 AI 학습에 사용되지 않습니다. 회사별 데이터 분리는 모든 플랜에서 기본 제공됩니다.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="security-enterprise">
+      <div class="security-enterprise-h">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m12 2 2.4 7.4H22l-6 4.4 2.3 7.2L12 16.6 5.7 21l2.3-7.2-6-4.4h7.6z"/></svg>
+        ENTERPRISE 추가 옵션
+      </div>
+      <ul class="security-enterprise-list">
+        <li>SSO · 도메인 통합 (SAML, OIDC)</li>
+        <li>SCIM 기반 사용자 자동 동기화</li>
+        <li>On-Premise · VPC 단독 환경</li>
+        <li>폐쇄망 · 전용 키 암호화</li>
+        <li>분기별 보안 보고서</li>
+        <li>전용 SLA · 전담 매니저</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ FAQ ============ -->
+<section id="faq" class="faq-section">
+  <div class="container">
+    <div class="faq-head">
+      <span class="eyebrow">FAQ</span>
+      <h2 class="faq-title">자주 묻는 질문</h2>
+      <p class="faq-subtitle">도입 전에 자주 받는 질문을 정리했습니다.</p>
+    </div>
+
+    <div class="faq-list">
+      <details class="faq-item">
+        <summary>
+          <span>고객 데이터를 AI 학습에 사용하나요?</span>
+          <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="faq-body">
+          <strong>아니요.</strong> 명시적 동의 없이는 AI 학습에 사용되지 않습니다. 모든 플랜에서 회사별 데이터 분리는 기본으로 제공되며, 외부 공유와 다운로드 허용 여부는 조직 관리자가 직접 설정합니다.
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>
+          <span>AI가 회사의 모든 문서에 접근하나요?</span>
+          <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="faq-body">
+          AI가 사용하는 자료는 <strong>요청한 사용자가 접근 가능한 자료</strong>로만 제한됩니다. 권한이 없는 문서·업무 기록·To-do는 프롬프트 구성에 포함되지 않으며, 검색 결과에도 노출되지 않습니다.
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>
+          <span>AI 결과를 그대로 사용해도 되나요?</span>
+          <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="faq-body">
+          모든 AI 결과는 <strong>초안</strong>입니다. 사용자가 검토하고 수정한 뒤 저장해야 정식 문서가 됩니다. AI가 확실히 알 수 없는 내용은 단정하지 않고 “확인 필요”로 표시되며, 참고 자료 사용 시 출처가 함께 표시됩니다.
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>
+          <span>플랜 변경이 가능한가요?</span>
+          <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="faq-body">
+          언제든 가능합니다. <strong>상향(Upgrade)</strong>은 즉시 반영되며 일할 계산으로 청구되고, <strong>하향(Downgrade)</strong>은 다음 결제 주기 시작일에 반영됩니다. 사용자 추가는 즉시, 제외는 다음 결제 주기에 반영됩니다.
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>
+          <span>도입에 얼마나 걸리나요?</span>
+          <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="faq-body">
+          <strong>Team</strong> 표준 일정은 신청 → 1–2일 내 미팅 → 3–5일 내 워크스페이스 셋업 완료입니다.<br />
+          <strong>Enterprise</strong>는 신청 → 5일 내 1차 미팅 → 보안·기술 검토 2–4주 → 계약·구축 순으로 진행됩니다.
+        </div>
+      </details>
+
+      <details class="faq-item">
+        <summary>
+          <span>AI 사용량 한도를 초과하면 어떻게 되나요?</span>
+          <svg class="faq-chevron" viewBox="0 0 24 24"><polyline points="6 9 12 15 18 9"/></svg>
+        </summary>
+        <div class="faq-body">
+          한도 도달 24시간 전에 알림이 발송됩니다. 도달 시 <strong>신규 AI 요청은 차단</strong>되지만 기존 문서의 조회·편집은 영향을 받지 않습니다. Team과 Enterprise는 자동 단계 상향이 발생하지 않으며, 명시적 합의가 필요합니다.
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ============ CONTACT ============ -->
+<section id="contact" class="contact-section">
+  <div class="container">
+    <div class="contact-head">
+      <span class="eyebrow">문의</span>
+      <h2 class="contact-title">도입을 검토하고 계신가요?</h2>
+      <p class="contact-subtitle">
+        팀 환경과 사용 시나리오에 맞는 도입 방식을 함께 정리해드립니다.<br />
+        궁금한 점이나 필요한 환경을 자유롭게 남겨주세요.
+      </p>
+    </div>
+
+    <form class="contact-form" id="contactForm" novalidate>
+      <div class="contact-email-hero">
+        <label for="cf-email" class="contact-email-label">EMAIL</label>
+        <div class="contact-email-field">
+          <svg class="contact-email-leading" viewBox="0 0 24 24" aria-hidden="true">
+            <rect x="3" y="5" width="18" height="14" rx="2" />
+            <path d="m3 7 9 6 9-6" />
+          </svg>
+          <input id="cf-email" name="email" type="email" placeholder="name@company.com" required class="contact-email-input" autocomplete="email" />
+        </div>
+        <p class="contact-email-hint">
+          <svg class="icon-sm" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+          <span>입력란을 클릭하면 추가 정보를 작성할 수 있습니다.</span>
+        </p>
+      </div>
+
+      <div class="contact-extra-wrap" aria-hidden="true">
+        <div class="contact-extra">
+          <div class="contact-row">
+            <div class="contact-field">
+              <label for="cf-name">이름</label>
+              <input id="cf-name" name="name" type="text" placeholder="홍길동" required autocomplete="name" />
+            </div>
+            <div class="contact-field">
+              <label for="cf-company">회사 / 조직</label>
+              <input id="cf-company" name="company" type="text" placeholder="회사명" autocomplete="organization" />
+            </div>
+          </div>
+
+          <div class="contact-field">
+            <label for="cf-message">문의 내용</label>
+            <textarea id="cf-message" name="message" rows="5" placeholder="조직 규모, 사용 시나리오, 시작 시점 등을 알려주시면 상담이 빨라집니다." required></textarea>
+          </div>
+
+          <div class="contact-actions">
+            <button type="submit" class="btn btn-primary contact-submit">
+              문의 보내기
+              <svg class="icon" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </button>
+            <p class="contact-note">제출 시 입력하신 내용이 메일 앱에 자동 작성됩니다.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="contact-result" id="contactResult" hidden></div>
+    </form>
+  </div>
+</section>
+
+<!-- ============ FOOTER ============ -->
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <a href="#" class="footer-logo"><img src="/brand/notive-logo_medium.png" alt="Notive" /></a>
+        <p class="footer-desc">회사의 업무 흐름을 이해하는<br />AI 업무 운영 플랫폼.</p>
+        <span class="footer-contact">
+          <svg class="footer-contact-mail" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+          <span class="footer-contact-email" id="footerEmail">hello@notive.kr</span>
+          <button type="button" class="footer-contact-copy" id="footerCopyBtn" aria-label="이메일 주소 복사">
+            <svg class="footer-copy-icon" viewBox="0 0 24 24"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+            <svg class="footer-copy-check" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+            <span class="footer-copy-tip">복사됨</span>
+          </button>
+        </span>
+      </div>
+      <div class="footer-col">
+        <h4>제품</h4>
+        <ul>
+          <li><a href="#intro">소개</a></li>
+          <li><a href="#features">기능</a></li>
+          <li><a href="#onboarding">시작 가이드</a></li>
+          <li><a href="#pricing">요금제</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>리소스</h4>
+        <ul>
+          <li><a href="#security">보안 &amp; 데이터</a></li>
+          <li><a href="#faq">자주 묻는 질문</a></li>
+          <li><a href="#contact">도입 문의</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>정책</h4>
+        <ul>
+          <li><a href="#">이용약관</a></li>
+          <li><a href="#">개인정보처리방침</a></li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="footer-bottom-left">
+        <span class="footer-bottom-mark">NOTIVE</span>
+        <span>© 2026 Notive. All rights reserved.</span>
+      </div>
+      <span class="footer-bottom-tag">회사의 맥락을 이해하는 AI 업무 운영 플랫폼</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    var form = document.getElementById('contactForm');
+    var result = document.getElementById('contactResult');
+    var emailInput = document.getElementById('cf-email');
+    if (!form || !emailInput) return;
+
+    var wrap = form.querySelector('.contact-extra-wrap');
+
+    function expand() {
+      if (form.classList.contains('is-expanded')) return;
+      form.classList.add('is-expanded');
+      if (wrap) wrap.setAttribute('aria-hidden', 'false');
+    }
+
+    emailInput.addEventListener('focus', expand);
+    emailInput.addEventListener('input', expand);
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      expand();
+      var name = form.name.value.trim();
+      var company = form.company.value.trim();
+      var email = form.email.value.trim();
+      var message = form.message.value.trim();
+
+      if (!name || !email || !message) {
+        result.hidden = false;
+        result.style.background = '#FEF3C7';
+        result.style.color = '#92400E';
+        result.textContent = '이름, 이메일, 문의 내용은 필수 항목입니다.';
+        return;
+      }
+
+      var subject = '[Notive 문의] ' + (company || name);
+      var body =
+        '이름: ' + name + '\n' +
+        '회사 / 조직: ' + company + '\n' +
+        '이메일: ' + email + '\n\n' +
+        '내용:\n' + message;
+
+      var mailto = 'mailto:hello@notive.kr'
+        + '?subject=' + encodeURIComponent(subject)
+        + '&body=' + encodeURIComponent(body);
+
+      window.location.href = mailto;
+
+      result.hidden = false;
+      result.style.background = '';
+      result.style.color = '';
+      result.textContent = '메일 앱이 열렸습니다. 작성된 내용을 확인하고 그대로 보내주시면 회신드립니다.';
+    });
+  })();
+
+  (function () {
+    var btn = document.getElementById('footerCopyBtn');
+    var emailEl = document.getElementById('footerEmail');
+    if (!btn || !emailEl) return;
+
+    var resetTimer = null;
+
+    function fallbackCopy(text) {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'absolute';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      try { document.execCommand('copy'); } catch (_) {}
+      document.body.removeChild(ta);
+    }
+
+    btn.addEventListener('click', function () {
+      var text = emailEl.textContent.trim();
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).catch(function () { fallbackCopy(text); });
+      } else {
+        fallbackCopy(text);
+      }
+
+      btn.classList.add('is-copied');
+      btn.setAttribute('aria-label', '복사됨');
+      if (resetTimer) clearTimeout(resetTimer);
+      resetTimer = setTimeout(function () {
+        btn.classList.remove('is-copied');
+        btn.setAttribute('aria-label', '이메일 주소 복사');
+      }, 1600);
+    });
+  })();
+</script>
+</body>
+</html>
