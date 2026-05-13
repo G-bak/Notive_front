@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Folder, FilePlus, CircleCheck, Share2, ChevronRight,
   Calendar, CheckSquare, Clock, Bell

@@ -1,4 +1,3 @@
-import React from 'react';
 import Sidebar from './components/Sidebar';
 import { Routes, Route } from 'react-router-dom';
 import TopHeader from './components/TopHeader';
@@ -7,6 +6,7 @@ import AiDocumentGeneration from './pages/AiDocumentGeneration';
 import Search from './pages/Search';
 import DocumentEditor from './pages/DocumentEditor';
 import LandingPage from './pages/LandingPage';
+import MyDocuments from './pages/MyDocuments';
 
 function App() {
   return (
@@ -28,6 +28,7 @@ function AppShell() {
 
         <Routes>
           <Route path="/" element={<Home />} />
+          <Route path="/documents" element={<MyDocuments />} />
           <Route path="/ai-document-generation" element={<AiDocumentGeneration />} />
           <Route path="/search" element={<Search />} />
           <Route path="/documents/:documentId" element={<DocumentEditor />} />

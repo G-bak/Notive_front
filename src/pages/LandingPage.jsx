@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import landingHtml from './landing.html?raw';
 
@@ -81,7 +81,7 @@ function LandingPage() {
       textarea.select();
       try {
         document.execCommand('copy');
-      } catch (_) {
+      } catch {
         // Clipboard fallback can fail in restricted browser contexts.
       }
       document.body.removeChild(textarea);

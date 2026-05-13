@@ -918,6 +918,211 @@ button {
   color: var(--text-main);
 }
 
+.my-documents-page {
+  display: flex;
+  flex-direction: column;
+}
+
+.my-documents-top {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding-bottom: 18px;
+}
+
+.my-documents-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.my-documents-heading {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  min-width: 0;
+}
+
+.my-documents-count {
+  padding-bottom: 2px;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+}
+
+.my-documents-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex: 0 0 auto;
+}
+
+.my-documents-new-button {
+  width: auto;
+  min-width: 116px;
+  height: 36px;
+  border-radius: 7px;
+  font-size: 13px;
+}
+
+.my-documents-new-button .btn-new-main {
+  padding: 0 13px;
+}
+
+.my-documents-new-button .btn-new-icon {
+  width: 32px;
+}
+
+.my-documents-outline-button {
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 0 13px;
+  border: 1px solid var(--border-color);
+  border-radius: 7px;
+  background: #fff;
+  color: var(--text-main);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+}
+
+.my-documents-outline-button svg {
+  color: var(--text-muted);
+}
+
+.my-documents-outline-button:hover {
+  background: var(--bg-color);
+  border-color: #cbd5e1;
+}
+
+.my-documents-view-tools {
+  height: 36px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0;
+  border: 1px solid var(--border-color);
+  border-radius: 7px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.my-documents-view-tools button {
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.my-documents-view-tools button + button {
+  border-left: 1px solid var(--border-light);
+}
+
+.my-documents-view-tools button.active {
+  background: #E6F0EE;
+  color: var(--primary);
+}
+
+.my-documents-view-tools button:hover {
+  background: var(--bg-color);
+  color: var(--text-main);
+}
+
+.my-documents-tabs {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 40px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.my-documents-tabs button {
+  position: relative;
+  height: 40px;
+  padding: 0 11px;
+  border: 0;
+  background: transparent;
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.my-documents-tabs button:hover,
+.my-documents-tabs button.active {
+  color: var(--primary);
+}
+
+.my-documents-tabs button.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -1px;
+  height: 2px;
+  border-radius: 999px;
+  background: var(--primary);
+}
+
+.my-documents-filter-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.my-documents-filter-chip,
+.my-documents-filter-add {
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0 13px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: #fff;
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+
+.my-documents-filter-chip strong {
+  color: var(--text-main);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.my-documents-filter-chip svg,
+.my-documents-filter-add svg {
+  color: var(--text-muted);
+}
+
+.my-documents-filter-chip:hover,
+.my-documents-filter-add:hover {
+  background: var(--bg-color);
+  border-color: #cbd5e1;
+}
+
+.my-documents-content {
+  flex: 1;
+  min-height: 100%;
+}
+
 /* Dashboard Grid */
 .dashboard-grid {
   display: grid;

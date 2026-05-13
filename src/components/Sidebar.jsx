@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import {
   Home, FileText, Share2, History, Star, Calendar, Users, Briefcase,
-  CheckSquare, BookOpen, LayoutTemplate, Archive, FilePlus, Search,
+  CheckSquare, BookOpen, LayoutTemplate, Archive, Search,
   BarChart2, Settings, ChevronDown, Plus, Sparkles
 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
@@ -48,7 +48,11 @@ function Sidebar() {
             <Home size={18} />
             <span className="nav-label">홈</span>
           </div>
-          <div className="nav-item">
+          <div
+            className={`nav-item ${location.pathname === '/documents' ? 'active' : ''}`}
+            onClick={() => navigate('/documents')}
+            style={{ cursor: 'pointer' }}
+          >
             <FileText size={18} />
             <span className="nav-label">내 문서</span>
           </div>

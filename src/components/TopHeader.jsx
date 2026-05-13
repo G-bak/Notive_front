@@ -1,4 +1,3 @@
-import React from 'react';
 import {
   Search as SearchIcon, HelpCircle, Bell, ChevronDown, ListFilter, Bookmark, X,
   Undo2, Redo2, MessageSquareText, Eye, History, MoreHorizontal, Check, Share2

@@ -2,7 +2,7 @@ import {
   Sparkles, ChevronDown, ChevronRight, ThumbsUp, ThumbsDown,
   List, Grid2x2, MoreHorizontal,
   Users, ShieldCheck, Activity, FileText, HardDrive,
-  Lock, RefreshCw, Share2, LayoutTemplate, Settings, Clock3
+  Lock, RefreshCw, Share2, LayoutTemplate, Settings
 } from 'lucide-react';
 import { Fragment } from 'react';
 import './Search.css';
