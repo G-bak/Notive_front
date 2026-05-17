@@ -151,6 +151,7 @@
 .knowledge-center::-webkit-scrollbar,
 .knowledge-right::-webkit-scrollbar {
   width: 6px;
+  height: 7px;
 }
 
 .knowledge-left::-webkit-scrollbar-thumb,
@@ -527,7 +528,7 @@
   background: #e6f6ef;
   color: #007a61;
   font-size: 11px;
-  font-weight: 800;
+  font-weight: 600;
 }
 
 .knowledge-template-card small {
@@ -650,13 +651,14 @@
   min-width: 0;
 }
 
-.knowledge-doc-name strong {
+.knowledge-doc-title {
   display: block;
   color: #1e293b;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   font-size: 12px;
+  font-weight: 600;
 }
 
 .knowledge-doc-name em {
@@ -679,19 +681,17 @@
   justify-content: center;
   height: 23px;
   padding: 0 8px;
-  border: 1px solid transparent;
   border-radius: 6px;
   font-size: 11px;
+  font-weight: 600;
 }
 
 .knowledge-status.approved {
-  border-color: #b7e4d7;
   color: #007a61;
   background: #e6f6ef;
 }
 
 .knowledge-status.review {
-  border-color: #fed7aa;
   color: #b45309;
   background: #fff3df;
 }

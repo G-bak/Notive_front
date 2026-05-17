@@ -305,7 +305,7 @@ function KnowledgeTemplateHub() {
                     <article
                       className={`knowledge-table-row${isSelected ? ' is-selected' : ''}`}
                       key={title}
-                      onClick={() => setSelectedDocumentTitle(title)}
+                      onClick={() => setSelectedDocumentTitle(isSelected ? null : title)}
                     >
                       <span>
                         <input
@@ -319,7 +319,7 @@ function KnowledgeTemplateHub() {
                       <span className="knowledge-doc-name">
                         <TypeIcon type={type} />
                         <span>
-                          <strong>{title}</strong>
+                          <span className="knowledge-doc-title">{title}</span>
                           <em>마케팅 &gt; 보고</em>
                         </span>
                       </span>
