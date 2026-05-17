@@ -1,4 +1,5 @@
 ﻿import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   MoreVertical, HelpCircle, ChevronDown, Check, X,
   Users, Sparkles, User, ShieldAlert
@@ -25,6 +26,7 @@ function RefDocIcon({ type }) {
 }
 
 function AiDocumentGeneration() {
+  const navigate = useNavigate();
   const [selectedTemplate, setSelectedTemplate] = useState(templateOptions[0]);
   const [isTemplateOpen, setIsTemplateOpen] = useState(false);
 
@@ -387,7 +389,7 @@ function AiDocumentGeneration() {
         <button className="btn-outline">초기화</button>
         <div className="bottom-bar-right">
           <button className="btn-outline">임시저장</button>
-          <button className="btn-primary-sparkle">
+          <button className="btn-primary-sparkle" onClick={() => navigate('/ai-document-generation/result')}>
             <Sparkles size={16} /> 초안 생성하기
           </button>
         </div>

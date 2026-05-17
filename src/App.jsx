@@ -3,10 +3,12 @@ import { Routes, Route } from 'react-router-dom';
 import TopHeader from './components/TopHeader';
 import Home from './pages/Home';
 import AiDocumentGeneration from './pages/AiDocumentGeneration';
+import AiDocumentGenerationResult from './pages/AiDocumentGenerationResult';
 import Search from './pages/Search';
 import DocumentEditor from './pages/DocumentEditor';
 import LandingPage from './pages/LandingPage';
 import MyDocuments from './pages/MyDocuments';
+import SettingsPage from './pages/Settings';
 
 function App() {
   return (
@@ -28,9 +30,15 @@ function AppShell() {
 
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/documents" element={<MyDocuments />} />
+          <Route path="/documents" element={<MyDocuments scope="all" />} />
+          <Route path="/documents/my" element={<MyDocuments scope="mine" />} />
+          <Route path="/documents/shared" element={<MyDocuments scope="shared" />} />
+          <Route path="/documents/favorites" element={<MyDocuments scope="favorites" />} />
+          <Route path="/documents/trash" element={<MyDocuments scope="trash" />} />
           <Route path="/ai-document-generation" element={<AiDocumentGeneration />} />
+          <Route path="/ai-document-generation/result" element={<AiDocumentGenerationResult />} />
           <Route path="/search" element={<Search />} />
+          <Route path="/settings" element={<SettingsPage />} />
           <Route path="/documents/:documentId" element={<DocumentEditor />} />
         </Routes>
 

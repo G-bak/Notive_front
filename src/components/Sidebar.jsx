@@ -1,8 +1,8 @@
 import { useState } from 'react';
 import {
-  Home, FileText, Share2, History, Star, Calendar, Users, Briefcase,
+  Home, FileText, Files, Share2, Star, Calendar, Users, Briefcase,
   CheckSquare, BookOpen, LayoutTemplate, Archive, Search,
-  BarChart2, Settings, ChevronDown, Plus, Sparkles
+  BarChart2, Settings, ChevronDown, Plus, Sparkles, Trash2
 } from 'lucide-react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
@@ -53,20 +53,40 @@ function Sidebar() {
             onClick={() => navigate('/documents')}
             style={{ cursor: 'pointer' }}
           >
+            <Files size={18} />
+            <span className="nav-label">전체 문서</span>
+          </div>
+          <div
+            className={`nav-item ${location.pathname === '/documents/my' ? 'active' : ''}`}
+            onClick={() => navigate('/documents/my')}
+            style={{ cursor: 'pointer' }}
+          >
             <FileText size={18} />
             <span className="nav-label">내 문서</span>
           </div>
-          <div className="nav-item">
+          <div
+            className={`nav-item ${location.pathname === '/documents/shared' ? 'active' : ''}`}
+            onClick={() => navigate('/documents/shared')}
+            style={{ cursor: 'pointer' }}
+          >
             <Share2 size={18} />
             <span className="nav-label">공유 문서</span>
           </div>
-          <div className="nav-item">
-            <History size={18} />
-            <span className="nav-label">최근 문서</span>
-          </div>
-          <div className="nav-item">
+          <div
+            className={`nav-item ${location.pathname === '/documents/favorites' ? 'active' : ''}`}
+            onClick={() => navigate('/documents/favorites')}
+            style={{ cursor: 'pointer' }}
+          >
             <Star size={18} />
             <span className="nav-label">즐겨찾기</span>
+          </div>
+          <div
+            className={`nav-item ${location.pathname === '/documents/trash' ? 'active' : ''}`}
+            onClick={() => navigate('/documents/trash')}
+            style={{ cursor: 'pointer' }}
+          >
+            <Trash2 size={18} />
+            <span className="nav-label">휴지통</span>
           </div>
         </div>
 
@@ -112,7 +132,7 @@ function Sidebar() {
         <div className="nav-group">
           <div className="nav-group-title">AI</div>
           <div 
-            className={`nav-item ai-highlight ${location.pathname === '/ai-document-generation' ? 'active' : ''}`}
+            className={`nav-item ai-highlight ${location.pathname.startsWith('/ai-document-generation') ? 'active' : ''}`}
             onClick={() => navigate('/ai-document-generation')}
             style={{ cursor: 'pointer' }}
           >
@@ -126,6 +146,19 @@ function Sidebar() {
           >
             <Search size={18} />
             <span className="nav-label">AI 통합 검색</span>
+          </div>
+        </div>
+
+        {/* Category: 관리 */}
+        <div className="nav-group">
+          <div className="nav-group-title">관리</div>
+          <div
+            className={`nav-item ${location.pathname === '/settings' ? 'active' : ''}`}
+            onClick={() => navigate('/settings')}
+            style={{ cursor: 'pointer' }}
+          >
+            <Settings size={18} />
+            <span className="nav-label">설정</span>
           </div>
         </div>
 
@@ -195,7 +228,11 @@ function Sidebar() {
               <div className="company-plan">Pro 플랜</div>
             </div>
           </div>
-          <button className="settings-btn">
+          <button
+            className="settings-btn"
+            onClick={() => navigate('/settings')}
+            aria-label="설정"
+          >
             <Settings size={16} />
           </button>
         </div>

@@ -7,7 +7,7 @@ import { useLocation } from 'react-router-dom';
 function TopHeader() {
   const location = useLocation();
   const isSearch = location.pathname === '/search';
-  const isEditor = location.pathname.startsWith('/documents/');
+  const isEditor = /^\/documents\/\d+$/.test(location.pathname);
 
   if (isEditor) {
     return (
