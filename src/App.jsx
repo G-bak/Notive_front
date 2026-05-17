@@ -9,6 +9,7 @@ import DocumentEditor from './pages/DocumentEditor';
 import LandingPage from './pages/LandingPage';
 import MyDocuments from './pages/MyDocuments';
 import SettingsPage from './pages/Settings';
+import KnowledgeTemplateHub from './pages/KnowledgeTemplateHub';
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function AppShell() {
           <Route path="/ai-document-generation" element={<AiDocumentGeneration />} />
           <Route path="/ai-document-generation/result" element={<AiDocumentGenerationResult />} />
           <Route path="/search" element={<Search />} />
+          <Route path="/knowledge" element={<KnowledgeTemplateHub />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/documents/:documentId" element={<DocumentEditor />} />
         </Routes>

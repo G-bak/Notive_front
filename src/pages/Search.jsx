@@ -1,5 +1,5 @@
 import {
-  Sparkles, ChevronDown, ChevronRight, ThumbsUp, ThumbsDown,
+  Sparkles, ChevronDown, ChevronLeft, ChevronRight, ThumbsUp, ThumbsDown,
   List, Grid2x2, MoreHorizontal,
   Users, ShieldCheck, Activity, FileText, HardDrive,
   Lock, RefreshCw, Share2, LayoutTemplate, Settings
@@ -219,6 +219,29 @@ function Pagination() {
   );
 }
 
+function SearchPagination() {
+  return (
+    <nav className="pagination" aria-label="검색 결과 페이지네이션">
+      <button type="button" className="pg-arrow" disabled aria-label="이전 페이지">
+        <ChevronLeft size={15} />
+      </button>
+      {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
+        <button
+          key={n}
+          type="button"
+          className={`pg-num${n === 1 ? ' active' : ''}`}
+          aria-current={n === 1 ? 'page' : undefined}
+        >
+          {n}
+        </button>
+      ))}
+      <button type="button" className="pg-arrow" aria-label="다음 페이지">
+        <ChevronRight size={15} />
+      </button>
+    </nav>
+  );
+}
+
 function AdminCard({ icon: Icon, title, children }) {
   return (
     <section className="admin-card">
@@ -355,7 +378,7 @@ function Search() {
             <div className="result-list">
               {results.map((r, i) => <ResultRow key={i} item={r} />)}
             </div>
-            <Pagination />
+            <SearchPagination />
           </div>
         </div>
 
