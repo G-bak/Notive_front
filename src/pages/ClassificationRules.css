@@ -206,7 +206,7 @@
 .classification-workspace {
   position: relative;
   display: grid;
-  grid-template-columns: 220px minmax(620px, 1fr) 340px;
+  grid-template-columns: 220px minmax(0, 1fr) 340px;
   gap: 14px;
   align-items: start;
 }
@@ -363,13 +363,13 @@
 }
 
 .classification-table-row {
-  min-width: 760px;
+  min-width: 780px;
   display: grid;
-  grid-template-columns: 22px 56px minmax(128px, 1.45fr) minmax(112px, 1.15fr) minmax(124px, 1.3fr) 66px 112px 54px;
+  grid-template-columns: 24px 68px minmax(140px, 1.4fr) minmax(110px, 1.15fr) minmax(130px, 1.3fr) 76px 120px 60px;
   align-items: center;
-  gap: 8px;
-  min-height: 55px;
-  padding: 0 12px;
+  gap: 10px;
+  min-height: 56px;
+  padding: 0 14px;
   border-bottom: 1px solid #edf1f5;
   color: #334155;
   font-size: 13px;
@@ -490,7 +490,9 @@
 
 .classification-table-row time {
   color: #475569;
-  font-size: 13px;
+  font-size: 12.5px;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
 }
 
 .classification-accuracy {
@@ -881,27 +883,34 @@
   font-weight: 650;
 }
 
-@media (max-width: 1280px) {
-  .classification-shell {
-    --classification-inspector-space: 314px;
-    min-width: 980px;
-  }
-
-  .classification-workspace {
-    grid-template-columns: 210px minmax(580px, 1fr) 300px;
-  }
-
-  .classification-inspector {
-    width: 300px;
-  }
-}
-
-@media (max-width: 1180px) {
+@media (max-width: 1700px) {
   .classification-shell {
     --classification-inspector-space: 0px;
     min-width: 0;
   }
 
+  .classification-workspace {
+    grid-template-columns: 220px minmax(0, 1fr);
+  }
+
+  .classification-inspector {
+    position: static;
+    width: auto;
+    grid-column: 1 / -1;
+    margin-top: 14px;
+  }
+
+  .classification-rule-modal {
+    position: relative;
+    left: auto;
+    bottom: auto;
+    width: auto;
+    margin: 14px;
+    transform: none;
+  }
+}
+
+@media (max-width: 1180px) {
   .classification-summary-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
@@ -918,19 +927,5 @@
 
   .classification-workspace {
     grid-template-columns: minmax(0, 1fr);
-  }
-
-  .classification-inspector {
-    position: static;
-    width: auto;
-  }
-
-  .classification-rule-modal {
-    position: relative;
-    left: auto;
-    bottom: auto;
-    width: auto;
-    margin: 14px;
-    transform: none;
   }
 }
