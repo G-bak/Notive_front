@@ -116,18 +116,19 @@
 .classification-tabs {
   display: flex;
   align-items: center;
-  gap: 30px;
+  gap: 0;
   min-width: 0;
 }
 
 .classification-tabs button {
   position: relative;
-  height: 42px;
+  height: 43px;
+  padding: 0 15px;
   border: 0;
   background: transparent;
   color: #475569;
   font-size: 13px;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
 }
 
@@ -141,8 +142,8 @@
   left: 0;
   right: 0;
   bottom: -1px;
-  height: 3px;
-  border-radius: 999px 999px 0 0;
+  height: 2px;
+  border-radius: 2px 2px 0 0;
   background: #006853;
 }
 
@@ -163,8 +164,8 @@
   justify-content: center;
   gap: 7px;
   border-radius: 7px;
-  font-size: 12.5px;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 600;
   cursor: pointer;
   white-space: nowrap;
 }
@@ -227,25 +228,23 @@
 }
 
 .classification-category-panel {
-  min-height: 552px;
-  display: flex;
-  flex-direction: column;
+  min-height: 410px;
   overflow: hidden;
 }
 
 .classification-panel-title {
-  height: 45px;
+  height: 40px;
   display: flex;
   align-items: center;
   padding: 0 16px;
   border-bottom: 1px solid #eef2f6;
-  color: #334155;
-  font-size: 13px;
-  font-weight: 800;
+  color: #5a6677;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 .classification-category-list {
-  padding: 8px 0;
+  padding: 0;
 }
 
 .classification-category-list button {
@@ -260,7 +259,7 @@
   background: transparent;
   color: #475569;
   font-size: 12.5px;
-  font-weight: 650;
+  font-weight: 500;
   cursor: pointer;
 }
 
@@ -285,7 +284,7 @@
 }
 
 .classification-priority-note {
-  margin: auto 14px 14px;
+  margin-top: 12px;
   padding: 14px;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
@@ -317,7 +316,7 @@
   background: transparent;
   color: #2563a5;
   font-size: 12px;
-  font-weight: 700;
+  font-weight: 600;
   cursor: pointer;
 }
 
@@ -364,24 +363,65 @@
 }
 
 .classification-table-row {
-  min-width: 860px;
+  min-width: 760px;
   display: grid;
-  grid-template-columns: 28px 86px minmax(156px, 1.1fr) minmax(150px, 1fr) minmax(152px, 1fr) 92px 132px 70px;
+  grid-template-columns: 22px 56px minmax(128px, 1.45fr) minmax(112px, 1.15fr) minmax(124px, 1.3fr) 66px 112px 54px;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
   min-height: 55px;
   padding: 0 12px;
   border-bottom: 1px solid #edf1f5;
   color: #334155;
-  font-size: 12.3px;
+  font-size: 13px;
+}
+
+.classification-table-row > span,
+.classification-table-row time,
+.classification-rule-name,
+.classification-action-stack,
+.classification-action-stack em {
+  min-width: 0;
+}
+
+.classification-table-header span,
+.classification-rule-name,
+.classification-table-row > span:nth-child(4),
+.classification-table-row time,
+.classification-action-stack em {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.classification-table-header span:nth-child(2),
+.classification-table-header span:nth-child(6),
+.classification-table-header span:nth-child(8),
+.classification-table-row > span:nth-child(2),
+.classification-table-row > span:nth-child(6),
+.classification-table-row > span:nth-child(8) {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: nowrap;
+}
+
+.classification-table-header span:first-child,
+.classification-table-header span:nth-child(2),
+.classification-table-header span:nth-child(6),
+.classification-table-header span:nth-child(8),
+.classification-table-row > span:first-child,
+.classification-table-row > span:nth-child(2),
+.classification-table-row > span:nth-child(6),
+.classification-table-row > span:nth-child(8) {
+  justify-self: center;
+  text-align: center;
 }
 
 .classification-table-header {
   min-height: 40px;
   background: #fbfcfd;
   color: #64748b;
-  font-size: 11.5px;
-  font-weight: 800;
+  font-size: 12.5px;
+  font-weight: 600;
 }
 
 .classification-table-row.selected {
@@ -405,13 +445,13 @@
   border-radius: 6px;
   background: #fff;
   color: #334155;
-  font-weight: 800;
+  font-weight: 500;
 }
 
-.classification-table-row strong {
+.classification-rule-name {
   color: #0f172a;
-  font-size: 12.6px;
-  font-weight: 800;
+  font-size: 13px;
+  font-weight: 500;
 }
 
 .classification-action-stack {
@@ -432,8 +472,8 @@
   align-items: center;
   padding: 0 8px;
   border-radius: 6px;
-  font-size: 11.5px;
-  font-weight: 800;
+  font-size: 12px;
+  font-weight: 500;
 }
 
 .classification-status.tone-active {
@@ -450,12 +490,12 @@
 
 .classification-table-row time {
   color: #475569;
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .classification-accuracy {
   color: #008060;
-  font-weight: 800;
+  font-weight: 500;
 }
 
 .classification-rule-modal {

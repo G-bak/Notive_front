@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   AlertTriangle,
   CheckCircle2,
@@ -128,6 +129,9 @@ const ruleActions = ['민감 정보 라벨 적용', '개인정보 마스킹 처�
 const affectedTeams = ['인사팀', '재무팀', '법무팀', '+ 3개'];
 
 function ClassificationRules() {
+  const [activeTab, setActiveTab] = useState(tabs[0]);
+  const [activeCategory, setActiveCategory] = useState(categories[0][0]);
+
   return (
     <div className="page-content classification-rules-page">
       <div className="classification-shell">
@@ -155,8 +159,13 @@ function ClassificationRules() {
 
         <div className="classification-tabs-row">
           <nav className="classification-tabs" aria-label="분류 규칙 필터">
-            {tabs.map((tab, index) => (
-              <button type="button" className={index === 0 ? 'active' : ''} key={tab}>
+            {tabs.map((tab) => (
+              <button
+                type="button"
+                className={activeTab === tab ? 'active' : ''}
+                key={tab}
+                onClick={() => setActiveTab(tab)}
+              >
                 {tab}
               </button>
             ))}
@@ -178,18 +187,25 @@ function ClassificationRules() {
         </div>
 
         <section className="classification-workspace">
-          <aside className="classification-category-panel">
-            <div className="classification-panel-title">규칙 카테고리</div>
-            <div className="classification-category-list">
-              {categories.map(([label, count, Icon, active]) => (
-                <button type="button" className={active ? 'active' : ''} key={label}>
-                  <span className="classification-category-name">
-                    <Icon size={15} />
-                    <span>{label}</span>
-                  </span>
-                  <span>{count}</span>
-                </button>
-              ))}
+          <aside className="classification-left-column">
+            <div className="classification-category-panel">
+              <div className="classification-panel-title">규칙 카테고리</div>
+              <div className="classification-category-list">
+                {categories.map(([label, count, Icon]) => (
+                  <button
+                    type="button"
+                    className={activeCategory === label ? 'active' : ''}
+                    key={label}
+                    onClick={() => setActiveCategory(label)}
+                  >
+                    <span className="classification-category-name">
+                      <Icon size={15} />
+                      <span>{label}</span>
+                    </span>
+                    <span>{count}</span>
+                  </button>
+                ))}
+              </div>
             </div>
 
             <div className="classification-priority-note">
@@ -236,7 +252,7 @@ function ClassificationRules() {
                     <GripVertical size={16} />
                   </span>
                   <span className="classification-priority-box">{rule.priority}</span>
-                  <strong>{rule.name}</strong>
+                  <span className="classification-rule-name">{rule.name}</span>
                   <span>{rule.condition}</span>
                   <span className="classification-action-stack">
                     {rule.action.map((item) => (
@@ -252,7 +268,6 @@ function ClassificationRules() {
               ))}
             </div>
 
-            <RuleEditModal />
           </main>
 
           <aside className="classification-inspector">
@@ -333,61 +348,6 @@ function ClassificationRules() {
           </aside>
         </section>
       </div>
-    </div>
-  );
-}
-
-function RuleEditModal() {
-  return (
-    <div className="classification-rule-modal" role="dialog" aria-label="규칙 편집">
-      <header>
-        <strong>규칙 편집</strong>
-        <button type="button" aria-label="닫기">x</button>
-      </header>
-
-      <div className="classification-modal-form">
-        <label>
-          <span>규칙 이름 <em>*</em></span>
-          <input type="text" value="개인정보 포함 문서 마스킹" readOnly />
-        </label>
-        <label>
-          <span>우선순위</span>
-          <select defaultValue="2">
-            <option value="2">2</option>
-          </select>
-        </label>
-      </div>
-
-      <section className="classification-builder-section">
-        <div className="classification-builder-title">IF <span>(다음 조건을 모두 만족하면)</span></div>
-        <div className="classification-builder-row">
-          <span>본문에 주민등록번호 패턴 포함</span>
-          <span>AND</span>
-          <span>문서 유형 = 보고서</span>
-          <button type="button">+ 조건 추가</button>
-        </div>
-      </section>
-
-      <section className="classification-builder-section">
-        <div className="classification-builder-title">THEN <span>(다음 작업을 수행)</span></div>
-        <div className="classification-builder-row">
-          <span>민감 정보 라벨 적용</span>
-          <span>외부 공유 차단</span>
-          <span>AI 참조 제외</span>
-          <button type="button">+ 작업 추가</button>
-        </div>
-      </section>
-
-      <footer>
-        <button type="button" className="classification-test-button">
-          <FlaskConical size={14} />
-          규칙 테스트
-        </button>
-        <div>
-          <button type="button" className="classification-cancel-button">취소</button>
-          <button type="button" className="classification-save-button">저장</button>
-        </div>
-      </footer>
     </div>
   );
 }
