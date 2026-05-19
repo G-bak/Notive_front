@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   AlertTriangle,
   BookOpen,
@@ -72,6 +72,24 @@ const documents = [
   ['pdf', '영업 제안서 샘플 (SaaS)', '템플릿', '영업팀', 'v1.5', '2024.05.03', 31, '검토 필요', 'review'],
 ];
 
+const knowledgeFilters = [
+  {
+    key: 'documentType',
+    label: '문서 유형',
+    options: ['전체', '보고서', '가이드', '정책', '템플릿'],
+  },
+  {
+    key: 'team',
+    label: '소유 팀',
+    options: ['전체', '마케팅팀', '인사팀', 'IT보안팀', '영업팀'],
+  },
+  {
+    key: 'aiReference',
+    label: 'AI 참고 가능',
+    options: ['전체', '가능', '불가'],
+  },
+];
+
 function TypeIcon({ type }) {
   const iconMap = {
     doc: 'docx',
@@ -91,9 +109,92 @@ function TypeIcon({ type }) {
   );
 }
 
+function KnowledgeFilterSelect({ filter, value, onChange }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const filterRef = useRef(null);
+  const selectedValue = value || '전체';
+
+  useEffect(() => {
+    if (!isOpen) return undefined;
+
+    const handlePointerDown = (event) => {
+      if (filterRef.current?.contains(event.target)) return;
+      setIsOpen(false);
+    };
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        setIsOpen(false);
+      }
+    };
+
+    window.document.addEventListener('pointerdown', handlePointerDown);
+    window.document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.document.removeEventListener('pointerdown', handlePointerDown);
+      window.document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen]);
+
+  const handleSelect = (option) => {
+    onChange(option === '전체' ? '' : option);
+    setIsOpen(false);
+  };
+
+  return (
+    <div className="knowledge-filter-select-wrap" ref={filterRef}>
+      <button
+        type="button"
+        className={`filter-pill knowledge-filter-select${isOpen ? ' is-active' : ''}`}
+        aria-haspopup="listbox"
+        aria-expanded={isOpen}
+        onClick={() => setIsOpen((open) => !open)}
+      >
+        <span className="filter-pill-label">{filter.label}</span>
+        <span className="filter-pill-value">{selectedValue}</span>
+        <ChevronDown size={14} />
+      </button>
+      {isOpen && (
+        <div className="knowledge-filter-select-menu" role="listbox" aria-label={filter.label}>
+          {filter.options.map((option) => {
+            const isSelected = selectedValue === option;
+            return (
+              <button
+                key={option}
+                type="button"
+                className={isSelected ? 'is-selected' : ''}
+                role="option"
+                aria-selected={isSelected}
+                onClick={() => handleSelect(option)}
+              >
+                {option}
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
 function KnowledgeTemplateHub() {
   const [expandedGroups, setExpandedGroups] = useState(() => new Set(['회사 기본 문서']));
   const [selectedDocumentTitle, setSelectedDocumentTitle] = useState(null);
+  const [filterValues, setFilterValues] = useState({
+    documentType: '',
+    team: '',
+    aiReference: '',
+  });
+  const filteredDocuments = documents.filter((document) => {
+    const [, , docType, team] = document;
+    const matchesType = !filterValues.documentType || docType === filterValues.documentType;
+    const matchesTeam = !filterValues.team || team === filterValues.team;
+    const matchesAiReference = !filterValues.aiReference || filterValues.aiReference === '가능';
+
+    return matchesType && matchesTeam && matchesAiReference;
+  });
+  const filteredDocumentStart = filteredDocuments.length > 0 ? 1 : 0;
   const selectedDocument = documents.find((document) => document[1] === selectedDocumentTitle);
 
   const handleToggleGroup = (groupName) => {
@@ -221,22 +322,24 @@ function KnowledgeTemplateHub() {
                   <input type="text" placeholder="현재 분류 검색" />
                 </label>
                 <div className="filter-bar knowledge-filter-pills">
-                  <button type="button" className="filter-pill">
-                    <span className="filter-pill-label">문서 유형</span>
-                    <span className="filter-pill-value">전체</span>
-                    <ChevronDown size={14} />
-                  </button>
-                  <button type="button" className="filter-pill">
-                    <span className="filter-pill-label">소유 팀</span>
-                    <span className="filter-pill-value">전체</span>
-                    <ChevronDown size={14} />
-                  </button>
-                  <button type="button" className="filter-pill">
-                    <span className="filter-pill-label">AI 참고 가능</span>
-                    <span className="filter-pill-value">전체</span>
-                    <ChevronDown size={14} />
-                  </button>
-                  <button type="button" className="filter-reset">
+                  {knowledgeFilters.map((filter) => (
+                    <KnowledgeFilterSelect
+                      key={filter.key}
+                      filter={filter}
+                      value={filterValues[filter.key]}
+                      onChange={(nextValue) => {
+                        setFilterValues((current) => ({
+                          ...current,
+                          [filter.key]: nextValue,
+                        }));
+                      }}
+                    />
+                  ))}
+                  <button
+                    type="button"
+                    className="filter-reset"
+                    onClick={() => setFilterValues({ documentType: '', team: '', aiReference: '' })}
+                  >
                     필터 초기화
                   </button>
                 </div>
@@ -298,7 +401,7 @@ function KnowledgeTemplateHub() {
                     <span>사용 횟수</span>
                     <span>승인 상태</span>
                   </div>
-                  {documents.map(([type, title, docType, team, version, date, uses, status, statusTone]) => {
+                  {filteredDocuments.map(([type, title, docType, team, version, date, uses, status, statusTone]) => {
                     const isSelected = selectedDocumentTitle === title;
 
                     return (
@@ -336,7 +439,9 @@ function KnowledgeTemplateHub() {
                 </div>
 
                 <footer className="knowledge-pagination">
-                  <div className="knowledge-pagination-summary">1-5 / 총 428개</div>
+                  <div className="knowledge-pagination-summary">
+                    {filteredDocumentStart}-{filteredDocuments.length} / 총 428개
+                  </div>
                   <nav className="knowledge-page-nav" aria-label="지식 문서 목록 페이지네이션">
                     <button type="button" className="page-arrow" aria-label="이전 페이지" disabled>
                       <ChevronRight size={15} />

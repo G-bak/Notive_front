@@ -4,13 +4,26 @@ import {
   Users, ShieldCheck, Activity, FileText, HardDrive,
   Lock, RefreshCw, Share2, LayoutTemplate, Settings
 } from 'lucide-react';
-import { Fragment } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import './Search.css';
 
 const filters = [
-  { label: '문서 유형', value: '전체' },
-  { label: '소유 팀', value: '전체' },
-  { label: '기간', value: '전체 기간' },
+  {
+    key: 'documentType',
+    label: '문서 유형',
+    options: ['전체', '문서', '스프레드시트', '프레젠테이션', 'PDF'],
+  },
+  {
+    key: 'team',
+    label: '소유 팀',
+    options: ['전체', '마케팅팀', '재무팀', '제휴팀', '전략기획팀'],
+  },
+  {
+    key: 'period',
+    label: '기간',
+    options: ['전체 기간', '최근 7일', '최근 30일', '최근 90일', '올해'],
+    emptyValue: '전체 기간',
+  },
 ];
 
 const sources = [
@@ -88,17 +101,87 @@ function DocIcon({ type }) {
   );
 }
 
-function FilterBar() {
+function SearchFilterSelect({ filter, value, onChange }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const filterRef = useRef(null);
+  const selectedValue = value || filter.emptyValue || '전체';
+
+  useEffect(() => {
+    if (!isOpen) return undefined;
+
+    const handlePointerDown = (event) => {
+      if (filterRef.current?.contains(event.target)) return;
+      setIsOpen(false);
+    };
+
+    const handleKeyDown = (event) => {
+      if (event.key === 'Escape') {
+        setIsOpen(false);
+      }
+    };
+
+    window.document.addEventListener('pointerdown', handlePointerDown);
+    window.document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.document.removeEventListener('pointerdown', handlePointerDown);
+      window.document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [isOpen]);
+
+  const handleSelect = (option) => {
+    onChange(option === (filter.emptyValue || '전체') ? '' : option);
+    setIsOpen(false);
+  };
+
+  return (
+    <div className="search-filter-select-wrap" ref={filterRef}>
+      <button
+        type="button"
+        className={`filter-pill search-filter-select${isOpen ? ' is-active' : ''}`}
+        aria-haspopup="listbox"
+        aria-expanded={isOpen}
+        onClick={() => setIsOpen((open) => !open)}
+      >
+        <span className="filter-pill-label">{filter.label}</span>
+        <span className="filter-pill-value">{selectedValue}</span>
+        <ChevronDown size={14} />
+      </button>
+      {isOpen && (
+        <div className="search-filter-select-menu" role="listbox" aria-label={filter.label}>
+          {filter.options.map((option) => {
+            const isSelected = selectedValue === option;
+            return (
+              <button
+                key={option}
+                type="button"
+                className={isSelected ? 'is-selected' : ''}
+                role="option"
+                aria-selected={isSelected}
+                onClick={() => handleSelect(option)}
+              >
+                {option}
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function FilterBar({ filterValues, onFilterChange, onReset }) {
   return (
     <div className="filter-bar">
-      {filters.map((f) => (
-        <button key={f.label} type="button" className="filter-pill">
-          <span className="filter-pill-label">{f.label}</span>
-          <span className="filter-pill-value">{f.value}</span>
-          <ChevronDown size={14} />
-        </button>
+      {filters.map((filter) => (
+        <SearchFilterSelect
+          key={filter.key}
+          filter={filter}
+          value={filterValues[filter.key]}
+          onChange={(nextValue) => onFilterChange(filter.key, nextValue)}
+        />
       ))}
-      <button type="button" className="filter-reset">필터 초기화</button>
+      <button type="button" className="filter-reset" onClick={onReset}>필터 초기화</button>
     </div>
   );
 }
@@ -183,10 +266,10 @@ function ResultRow({ item }) {
   );
 }
 
-function ResultsHeader() {
+function ResultsHeader({ count }) {
   return (
     <div className="results-header">
-      <div className="results-count">검색 결과 <strong>24개</strong></div>
+      <div className="results-count">검색 결과 <strong>{count}개</strong></div>
       <div className="results-tools">
         <button type="button" className="results-sort">
           정확도순 <ChevronDown size={14} />
@@ -197,25 +280,6 @@ function ResultsHeader() {
         </div>
       </div>
     </div>
-  );
-}
-
-function Pagination() {
-  return (
-    <nav className="pagination" aria-label="페이지네이션">
-      <button type="button" className="pg-arrow" disabled aria-label="이전">‹</button>
-      {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
-        <button
-          key={n}
-          type="button"
-          className={`pg-num${n === 1 ? ' active' : ''}`}
-        >
-          {n}
-        </button>
-      ))}
-      <span className="pg-ellipsis">…</span>
-      <button type="button" className="pg-arrow" aria-label="다음">›</button>
-    </nav>
   );
 }
 
@@ -367,16 +431,43 @@ function StorageUsageCard() {
 }
 
 function Search() {
+  const [filterValues, setFilterValues] = useState({
+    documentType: '',
+    team: '',
+    period: '',
+  });
+  const typeLabels = {
+    docx: '문서',
+    xlsx: '스프레드시트',
+    pptx: '프레젠테이션',
+    pdf: 'PDF',
+  };
+  const filteredResults = results.filter((result) => {
+    const matchesType = !filterValues.documentType || typeLabels[result.type] === filterValues.documentType;
+    const matchesTeam = !filterValues.team || result.team === filterValues.team;
+
+    return matchesType && matchesTeam;
+  });
+  const handleFilterChange = (key, nextValue) => {
+    setFilterValues((current) => ({
+      ...current,
+      [key]: nextValue,
+    }));
+  };
+  const handleResetFilters = () => {
+    setFilterValues({ documentType: '', team: '', period: '' });
+  };
+
   return (
     <div className="page-content search-page">
       <div className="search-grid">
         <div className="search-main">
-          <FilterBar />
+          <FilterBar filterValues={filterValues} onFilterChange={handleFilterChange} onReset={handleResetFilters} />
           <AiSummaryCard />
           <div className="results-section">
-            <ResultsHeader />
+            <ResultsHeader count={filteredResults.length} />
             <div className="result-list">
-              {results.map((r, i) => <ResultRow key={i} item={r} />)}
+              {filteredResults.map((r, i) => <ResultRow key={i} item={r} />)}
             </div>
             <SearchPagination />
           </div>

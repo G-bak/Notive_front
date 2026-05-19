@@ -15,6 +15,7 @@ import {
   Search,
   Settings,
   Share2,
+  SlidersHorizontal,
   Sparkles,
   Star,
   Trash2,
@@ -116,6 +117,14 @@ function Sidebar() {
           <button type="button" className="nav-item">
             <Archive size={18} />
             <span className="nav-label">회사 자료실</span>
+          </button>
+          <button
+            type="button"
+            className={`nav-item ${isActive('/classification-rules') ? 'active' : ''}`}
+            onClick={() => navigate('/classification-rules')}
+          >
+            <SlidersHorizontal size={18} />
+            <span className="nav-label">분류 규칙</span>
           </button>
         </div>
 

@@ -10,6 +10,7 @@ import LandingPage from './pages/LandingPage';
 import MyDocuments from './pages/MyDocuments';
 import SettingsPage from './pages/Settings';
 import KnowledgeTemplateHub from './pages/KnowledgeTemplateHub';
+import ClassificationRules from './pages/ClassificationRules';
 
 function App() {
   return (
@@ -40,6 +41,7 @@ function AppShell() {
           <Route path="/ai-document-generation/result" element={<AiDocumentGenerationResult />} />
           <Route path="/search" element={<Search />} />
           <Route path="/knowledge" element={<KnowledgeTemplateHub />} />
+          <Route path="/classification-rules" element={<ClassificationRules />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/documents/:documentId" element={<DocumentEditor />} />
         </Routes>
