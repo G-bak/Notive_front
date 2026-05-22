@@ -111,9 +111,9 @@ function LandingPage() {
       if (!anchor || !root.contains(anchor)) return;
 
       const href = anchor.getAttribute('href');
-      if (href === '/') {
+      if (href === '/' || href === '/ppt' || href === '/presentation') {
         event.preventDefault();
-        navigate('/');
+        navigate(href);
         return;
       }
 
