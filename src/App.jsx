@@ -11,6 +11,8 @@ import MyDocuments from './pages/MyDocuments';
 import SettingsPage from './pages/Settings';
 import KnowledgeTemplateHub from './pages/KnowledgeTemplateHub';
 import ClassificationRules from './pages/ClassificationRules';
+import CompanyLibrary from './pages/CompanyLibrary';
+import Templates from './pages/Templates';
 
 function App() {
   return (
@@ -41,6 +43,8 @@ function AppShell() {
           <Route path="/ai-document-generation/result" element={<AiDocumentGenerationResult />} />
           <Route path="/search" element={<Search />} />
           <Route path="/knowledge" element={<KnowledgeTemplateHub />} />
+          <Route path="/templates" element={<Templates />} />
+          <Route path="/company-library" element={<CompanyLibrary />} />
           <Route path="/classification-rules" element={<ClassificationRules />} />
           <Route path="/settings" element={<SettingsPage />} />
           <Route path="/documents/:documentId" element={<DocumentEditor />} />

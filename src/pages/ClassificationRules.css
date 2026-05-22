@@ -4,10 +4,17 @@
   overflow: auto;
 }
 
-.classification-shell {
-  --classification-inspector-space: 354px;
-  min-width: 1060px;
+.classification-layout {
+  min-width: 0;
   min-height: calc(100vh - 104px);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+  gap: 14px;
+  align-items: start;
+}
+
+.classification-shell {
+  min-width: 0;
   color: #0f172a;
 }
 
@@ -35,7 +42,6 @@
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 14px;
-  margin-right: var(--classification-inspector-space);
   margin-bottom: 22px;
 }
 
@@ -67,7 +73,7 @@
 .classification-summary-card strong {
   color: #0f172a;
   font-size: 25px;
-  font-weight: 800;
+  font-weight: 700;
   letter-spacing: 0;
 }
 
@@ -108,7 +114,6 @@
   align-items: center;
   justify-content: space-between;
   gap: 16px;
-  margin-right: var(--classification-inspector-space);
   margin-bottom: 18px;
   border-bottom: 1px solid #e5e7eb;
 }
@@ -204,19 +209,14 @@
 }
 
 .classification-workspace {
-  position: relative;
   display: grid;
-  grid-template-columns: 220px minmax(0, 1fr) 340px;
+  grid-template-columns: 220px minmax(0, 1fr);
   gap: 14px;
   align-items: start;
 }
 
 .classification-inspector {
-  position: absolute;
-  top: -192px;
-  right: 0;
-  z-index: 3;
-  width: 340px;
+  min-width: 0;
 }
 
 .classification-category-panel,
@@ -295,7 +295,7 @@
   display: block;
   color: #334155;
   font-size: 12.5px;
-  font-weight: 800;
+  font-weight: 700;
 }
 
 .classification-priority-note p {
@@ -316,12 +316,13 @@
   background: transparent;
   color: #2563a5;
   font-size: 12px;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
 }
 
 .classification-table-panel {
   position: relative;
+  min-width: 0;
   min-height: 552px;
   overflow: visible;
 }
@@ -363,9 +364,8 @@
 }
 
 .classification-table-row {
-  min-width: 780px;
   display: grid;
-  grid-template-columns: 24px 68px minmax(140px, 1.4fr) minmax(110px, 1.15fr) minmax(130px, 1.3fr) 76px 120px 60px;
+  grid-template-columns: 24px 55px minmax(60px, 1.4fr) minmax(50px, 1.15fr) minmax(50px, 1fr) 76px 120px 50px;
   align-items: center;
   gap: 10px;
   min-height: 56px;
@@ -445,7 +445,7 @@
   border-radius: 6px;
   background: #fff;
   color: #334155;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .classification-rule-name {
@@ -675,7 +675,7 @@
 }
 
 .classification-inspector-top {
-  height: 48px;
+  height: 44px;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -685,38 +685,37 @@
 
 .classification-inspector-top span {
   color: #334155;
-  font-size: 13px;
-  font-weight: 800;
+  font-size: 15px;
+  font-weight: 600;
 }
 
 .classification-rule-summary {
-  margin: 14px;
-  padding: 13px 14px;
+  margin: 0;
+  padding: 13px 16px;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
   gap: 12px;
-  border: 1px solid #dce3ea;
-  border-radius: 8px;
-  background: #fff;
 }
 
 .classification-rule-summary div {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 9px;
 }
 
 .classification-rule-summary strong {
-  color: #0f172a;
-  font-size: 13.5px;
-  font-weight: 850;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 700;
 }
 
 .classification-rule-summary span {
-  color: #64748b;
-  font-size: 12px;
-  font-weight: 700;
+  color: #475569;
+  font-size: 13px;
+  font-weight: 400;
+  line-height: 1.55;
+  word-break: keep-all;
 }
 
 .classification-rule-summary mark {
@@ -728,8 +727,8 @@
   border-radius: 6px;
   background: #e2f6ea;
   color: #007a5a;
-  font-size: 11.5px;
-  font-weight: 800;
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .classification-inspector-section {
@@ -740,14 +739,14 @@
 .classification-inspector-section h2 {
   margin: 0 0 9px;
   color: #334155;
-  font-size: 12.5px;
-  font-weight: 850;
+  font-size: 13px;
+  font-weight: 700;
 }
 
 .classification-inspector-section p {
   margin: 0;
   color: #475569;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.55;
   word-break: keep-all;
 }
@@ -766,7 +765,7 @@
   align-items: flex-start;
   gap: 7px;
   color: #334155;
-  font-size: 12px;
+  font-size: 13px;
   line-height: 1.35;
 }
 
@@ -787,7 +786,7 @@
 }
 
 .classification-team-chips span {
-  height: 26px;
+  height: 28px;
   display: inline-flex;
   align-items: center;
   padding: 0 9px;
@@ -795,8 +794,8 @@
   border-radius: 6px;
   background: #f8fafc;
   color: #475569;
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 500;
 }
 
 .classification-run-result {
@@ -809,8 +808,8 @@
 
 .classification-run-result time {
   color: #64748b;
-  font-size: 12px;
-  font-weight: 650;
+  font-size: 13px;
+  font-weight: 500;
 }
 
 .classification-run-result span {
@@ -818,11 +817,12 @@
   display: inline-flex;
   align-items: center;
   padding: 0 8px;
+  border: 1px solid #bfe8d1;
   border-radius: 5px;
   background: #e2f6ea;
   color: #007a5a;
-  font-size: 11.5px;
-  font-weight: 800;
+  font-size: 12px;
+  font-weight: 600;
 }
 
 .classification-run-stats {
@@ -830,7 +830,7 @@
   flex-wrap: wrap;
   gap: 8px;
   color: #64748b;
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .classification-run-stats strong {
@@ -846,8 +846,8 @@
   align-items: flex-start;
   gap: 8px;
   color: #b45309;
-  font-size: 12px;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 500;
   line-height: 1.4;
   margin-bottom: 8px;
 }
@@ -873,31 +873,23 @@
 
 .classification-audit-list dt {
   color: #64748b;
-  font-size: 12px;
+  font-size: 13px;
 }
 
 .classification-audit-list dd {
   margin: 0;
   color: #334155;
-  font-size: 12px;
-  font-weight: 650;
+  font-size: 13px;
+  font-weight: 500;
 }
 
-@media (max-width: 1700px) {
-  .classification-shell {
-    --classification-inspector-space: 0px;
-    min-width: 0;
-  }
+.classification-inspector-card .classification-link-button {
+  font-size: 13px;
+}
 
-  .classification-workspace {
-    grid-template-columns: 220px minmax(0, 1fr);
-  }
-
-  .classification-inspector {
-    position: static;
-    width: auto;
-    grid-column: 1 / -1;
-    margin-top: 14px;
+@media (max-width: 1400px) {
+  .classification-layout {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .classification-rule-modal {

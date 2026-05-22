@@ -110,11 +110,15 @@ function Sidebar() {
             <BookOpen size={18} />
             <span className="nav-label">지식 문서함</span>
           </button>
-          <button type="button" className="nav-item">
+          <button type="button" className={`nav-item ${isActive('/templates') ? 'active' : ''}`} onClick={() => navigate('/templates')}>
             <LayoutTemplate size={18} />
             <span className="nav-label">템플릿</span>
           </button>
-          <button type="button" className="nav-item">
+          <button
+            type="button"
+            className={`nav-item ${isActive('/company-library') ? 'active' : ''}`}
+            onClick={() => navigate('/company-library')}
+          >
             <Archive size={18} />
             <span className="nav-label">회사 자료실</span>
           </button>

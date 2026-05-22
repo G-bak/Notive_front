@@ -43,6 +43,7 @@ const categories = [
 const rules = [
   {
     priority: 1,
+    tabs: ['문서 유형', '보존 정책'],
     name: '계약서 자동 분류',
     condition: '문서 유형 = 계약서',
     action: ['분류: 계약서', '보존: 7년'],
@@ -53,6 +54,7 @@ const rules = [
   },
   {
     priority: 2,
+    tabs: ['민감 정보'],
     name: '개인정보 포함 문서 마스킹',
     condition: '본문에 개인정보 패턴 포함',
     action: ['민감 정보 라벨 적용', '마스킹 처리'],
@@ -64,6 +66,7 @@ const rules = [
   },
   {
     priority: 3,
+    tabs: ['민감 정보'],
     name: '외부 공유 승인 필요',
     condition: '태그 = 외부공유',
     action: ['공유 제한', '승인 워크플로우'],
@@ -74,6 +77,7 @@ const rules = [
   },
   {
     priority: 4,
+    tabs: ['민감 정보', 'AI 참조'],
     name: 'AI 참조 제외',
     condition: '민감도 = 기밀 이상',
     action: ['AI 참조 제외', '요약 비활성화'],
@@ -84,6 +88,7 @@ const rules = [
   },
   {
     priority: 5,
+    tabs: ['보존 정책'],
     name: '7년 보존 정책',
     condition: '문서 유형 = 계약서',
     action: ['보존 기간 설정: 7년', '자료 만료 처리'],
@@ -94,6 +99,7 @@ const rules = [
   },
   {
     priority: 6,
+    tabs: ['민감 정보'],
     name: '인사 문서 접근 제한',
     condition: '소유 팀 = 인사팀',
     action: ['팀 접근 제한', '권한 상속 차단'],
@@ -104,6 +110,7 @@ const rules = [
   },
   {
     priority: 7,
+    tabs: ['문서 유형'],
     name: '재무 보고 자동 분류',
     condition: '문서 제목에 재무 포함',
     action: ['분류: 재무 보고', '보존: 5년'],
@@ -114,6 +121,7 @@ const rules = [
   },
   {
     priority: 8,
+    tabs: ['보존 정책'],
     name: '임시 문서 자동 만료',
     condition: '상태 = 임시',
     action: ['30일 후 만료', '작성자 알림'],
@@ -131,10 +139,15 @@ const affectedTeams = ['인사팀', '재무팀', '법무팀', '+ 3개'];
 function ClassificationRules() {
   const [activeTab, setActiveTab] = useState(tabs[0]);
   const [activeCategory, setActiveCategory] = useState(categories[0][0]);
+  const [searchQuery, setSearchQuery] = useState('개인정보, 외부 공유, AI 참조');
+  const filteredRules = activeTab === tabs[0]
+    ? rules
+    : rules.filter((rule) => rule.tabs.includes(activeTab));
 
   return (
     <div className="page-content classification-rules-page">
-      <div className="classification-shell">
+      <div className="classification-layout">
+        <div className="classification-shell">
         <header className="classification-header">
           <div>
             <h1 className="page-title">분류 규칙</h1>
@@ -165,6 +178,7 @@ function ClassificationRules() {
                 className={activeTab === tab ? 'active' : ''}
                 key={tab}
                 onClick={() => setActiveTab(tab)}
+                aria-pressed={activeTab === tab}
               >
                 {tab}
               </button>
@@ -222,7 +236,12 @@ function ClassificationRules() {
             <div className="classification-table-head">
               <div className="classification-search-box">
                 <Search size={15} />
-                <input type="text" value="개인정보, 외부 공유, AI 참조" readOnly />
+                <input
+                  type="text"
+                  value={searchQuery}
+                  aria-label="분류 규칙 검색"
+                  onChange={(event) => setSearchQuery(event.target.value)}
+                />
               </div>
               <button type="button" className="classification-filter-button">
                 <SlidersHorizontal size={15} />
@@ -242,7 +261,7 @@ function ClassificationRules() {
                 <span>정확도</span>
               </div>
 
-              {rules.map((rule) => (
+              {filteredRules.map((rule) => (
                 <div
                   className={`classification-table-row ${rule.selected ? 'selected' : ''}`}
                   role="row"
@@ -270,85 +289,92 @@ function ClassificationRules() {
 
           </main>
 
-          <aside className="classification-inspector">
-            <div className="classification-inspector-card">
-              <div className="classification-inspector-top">
-                <span>선택한 규칙</span>
-                <button type="button" aria-label="닫기">x</button>
-              </div>
-
-              <section className="classification-rule-summary">
-                <div>
-                  <strong>개인정보 포함 문서 마스킹</strong>
-                  <span>우선순위 2</span>
-                </div>
-                <mark>활성</mark>
-              </section>
-
-              <InspectorSection title="규칙 요약">
-                <p>문서 본문에 개인정보 패턴이 포함된 보고서를 자동으로 감지하여 마스킹 및 권한 정책을 적용합니다.</p>
-              </InspectorSection>
-
-              <InspectorSection title="트리거 조건">
-                <CheckList items={triggerConditions} />
-              </InspectorSection>
-
-              <InspectorSection title="적용 작업">
-                <CheckList items={ruleActions} muted />
-              </InspectorSection>
-
-              <InspectorSection title="영향 받는 팀">
-                <div className="classification-team-chips">
-                  {affectedTeams.map((team) => (
-                    <span key={team}>{team}</span>
-                  ))}
-                </div>
-              </InspectorSection>
-
-              <InspectorSection title="최근 실행 결과">
-                <div className="classification-run-result">
-                  <time>2025-05-19 08:47</time>
-                  <span>성공</span>
-                </div>
-                <div className="classification-run-stats">
-                  <span>매칭 문서 <strong>34건</strong></span>
-                  <span>처리 성공 <strong>33건</strong></span>
-                  <span>실패 <strong>1건</strong></span>
-                </div>
-              </InspectorSection>
-
-              <InspectorSection title="정책 충돌">
-                <div className="classification-conflict-box">
-                  <CircleAlert size={15} />
-                  <span>외부 공유 승인 필요 규칙과 충돌 가능</span>
-                </div>
-                <button type="button" className="classification-link-button">
-                  충돌 규칙 보기
-                  <ChevronRight size={13} />
-                </button>
-              </InspectorSection>
-
-              <InspectorSection title="감사 로그">
-                <dl className="classification-audit-list">
-                  <div>
-                    <dt>최근 수정</dt>
-                    <dd>2025-05-16 14:22 (김지현)</dd>
-                  </div>
-                  <div>
-                    <dt>생성일</dt>
-                    <dd>2025-04-02 10:15 (김지현)</dd>
-                  </div>
-                </dl>
-                <button type="button" className="classification-link-button">
-                  전체 변경 이력 보기
-                  <ChevronRight size={13} />
-                </button>
-              </InspectorSection>
-            </div>
-          </aside>
         </section>
+        </div>
+
+        <RuleInspector />
       </div>
     </div>
+  );
+}
+
+function RuleInspector() {
+  return (
+    <aside className="classification-inspector">
+      <div className="classification-inspector-card">
+        <div className="classification-inspector-top">
+          <span>선택된 규칙</span>
+        </div>
+
+        <section className="classification-rule-summary">
+          <div>
+            <strong>개인정보 포함 문서 마스킹</strong>
+            <span>우선순위 2</span>
+          </div>
+          <mark>활성</mark>
+        </section>
+
+        <InspectorSection title="규칙 요약">
+          <p>문서 본문에 개인정보 패턴이 포함된 보고서를 자동으로 감지하여 마스킹 및 권한 정책을 적용합니다.</p>
+        </InspectorSection>
+
+        <InspectorSection title="트리거 조건">
+          <CheckList items={triggerConditions} />
+        </InspectorSection>
+
+        <InspectorSection title="적용 작업">
+          <CheckList items={ruleActions} muted />
+        </InspectorSection>
+
+        <InspectorSection title="영향 받는 팀">
+          <div className="classification-team-chips">
+            {affectedTeams.map((team) => (
+              <span key={team}>{team}</span>
+            ))}
+          </div>
+        </InspectorSection>
+
+        <InspectorSection title="최근 실행 결과">
+          <div className="classification-run-result">
+            <time>2025-05-19 08:47</time>
+            <span>성공</span>
+          </div>
+          <div className="classification-run-stats">
+            <span>매칭 문서 34건</span>
+            <span>처리 성공 33건</span>
+            <span>실패 1건</span>
+          </div>
+        </InspectorSection>
+
+        <InspectorSection title="정책 충돌">
+          <div className="classification-conflict-box">
+            <CircleAlert size={15} />
+            <span>외부 공유 승인 필요 규칙과 충돌 가능</span>
+          </div>
+          <button type="button" className="classification-link-button">
+            충돌 규칙 보기
+            <ChevronRight size={13} />
+          </button>
+        </InspectorSection>
+
+        <InspectorSection title="감사 로그">
+          <dl className="classification-audit-list">
+            <div>
+              <dt>최근 수정</dt>
+              <dd>2025-05-16 14:22 (김지현)</dd>
+            </div>
+            <div>
+              <dt>생성일</dt>
+              <dd>2025-04-02 10:15 (김지현)</dd>
+            </div>
+          </dl>
+          <button type="button" className="classification-link-button">
+            전체 변경 이력 보기
+            <ChevronRight size={13} />
+          </button>
+        </InspectorSection>
+      </div>
+    </aside>
   );
 }
 

@@ -1047,6 +1047,86 @@
   border-color: #d79a42;
 }
 
+.doc-inspector .ins-tab {
+  font-size: 13.5px;
+}
+
+.doc-inspector .ins-section-title {
+  font-size: 14px;
+}
+
+.doc-inspector .ins-row,
+.doc-inspector .ins-person {
+  font-size: 13.5px;
+}
+
+.doc-inspector .ins-row-label,
+.doc-inspector .ins-select,
+.doc-inspector .ins-add-btn,
+.doc-inspector .ins-tag,
+.doc-inspector .ins-link-btn {
+  font-size: 13px;
+}
+
+.doc-inspector .ins-person-text strong,
+.doc-inspector .ins-share-select-text strong {
+  font-size: 13.5px;
+}
+
+.doc-inspector .ins-person-text span,
+.doc-inspector .ins-share-select-text span,
+.doc-inspector .ins-group-count {
+  font-size: 12.5px;
+}
+
+.doc-inspector .ins-avatar,
+.doc-inspector .ins-avatar-more {
+  font-size: 11.5px;
+}
+
+.doc-inspector .ins-group-name {
+  font-size: 13px;
+}
+
+.doc-inspector .version-list li,
+.doc-inspector .ai-info-row {
+  font-size: 13px;
+}
+
+.doc-inspector .version-text strong {
+  font-size: 13px;
+}
+
+.doc-inspector .version-text span,
+.doc-inspector .version-author,
+.doc-inspector .version-time {
+  font-size: 12.5px;
+}
+
+.doc-inspector .ai-info-link {
+  font-size: 13px;
+}
+
+.doc-inspector .ref-source-title {
+  font-size: 13px;
+}
+
+.doc-inspector .ref-source-category {
+  font-size: 12px;
+}
+
+.doc-inspector .sensitive-warn-head {
+  font-size: 13.5px;
+}
+
+.doc-inspector .sensitive-warn p {
+  font-size: 13px;
+}
+
+.doc-inspector .sensitive-warn-btn {
+  font-size: 12.5px;
+}
+
 /* ============================================================== */
 /* INSPECTOR - AI ASSISTANT PANEL                                */
 /* ============================================================== */
