@@ -13,11 +13,13 @@ import KnowledgeTemplateHub from './pages/KnowledgeTemplateHub';
 import ClassificationRules from './pages/ClassificationRules';
 import CompanyLibrary from './pages/CompanyLibrary';
 import Templates from './pages/Templates';
+import Presentation from './pages/Presentation';
 
 function App() {
   return (
     <Routes>
       <Route path="/landing" element={<LandingPage />} />
+      <Route path="/presentation" element={<Presentation />} />
       <Route path="/*" element={<AppShell />} />
     </Routes>
   );
